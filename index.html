@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="https://jaxsbr.github.io/pkb-blog/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="./atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="./favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="./css/style.css">
+
+  
+    
+<link rel="stylesheet" href="./fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="./" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="./">Home</a>
+        
+          <a class="main-nav-link" href="./archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="./atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jaxsbr.github.io/pkb-blog"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-hexo-basics" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="./2022/05/04/hexo-basics/" class="article-date">
+  <time class="dt-published" datetime="2022-05-03T21:36:17.462Z" itemprop="datePublished">2022-05-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="Hexo-Basics"><a href="#Hexo-Basics" class="headerlink" title="Hexo Basics"></a>Hexo Basics</h1><p>Hexo is a static site generator.</p>
+<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=Kt7u5kr_P5o&list=PLLAZ4kZ9dFpOMJR6D25ishrSedvsguVSm">Mike Dane - Hexo Tutorial Series</a></p>
+<h2 id="Instalation"><a href="#Instalation" class="headerlink" title="Instalation"></a>Instalation</h2><hr>
+<p><a target="_blank" rel="noopener" href="https://youtu.be/ARted4RniaU">installation</a><br><a target="_blank" rel="noopener" href="https://hexo.io/docs/">doc</a></p>
+<p>Add the hexo-cli tool globaly  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+
+<p>You can install the package instead, making the hexo commands only available within a project VS globaly anywhere.  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Getting-Started"><a href="#Getting-Started" class="headerlink" title="Getting Started"></a>Getting Started</h2><hr>
+<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=0m2HnATkHOk">site creation, 0 - 3:30</a></p>
+<p>Creating the intial site.  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo init &#123;name of your site&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Running the site.  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo server</span><br></pre></td></tr></table></figure>
+
+<h2 id="Scaffolds"><a href="#Scaffolds" class="headerlink" title="Scaffolds"></a>Scaffolds</h2><hr>
+<p>Scaffolds folder contains template markdown files.<br>These files acts as the starting file when creating new post, drafts or pages.  </p>
+<p>You can create custom scaffolds by adding new <strong>.md</strong> files in the <strong>_scaffolds</strong> folder.</p>
+<h2 id="Source"><a href="#Source" class="headerlink" title="Source"></a>Source</h2><hr>
+<p>Source folder contains all your content.<br><em><strong>e.g blog posts</strong></em></p>
+<h2 id="Themes"><a href="#Themes" class="headerlink" title="Themes"></a>Themes</h2><hr>
+<p><a target="_blank" rel="noopener" href="https://hexo.io/themes/">Official Hexo themes</a><br><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=A-muxF_6plc&list=PLLAZ4kZ9dFpOMJR6D25ishrSedvsguVSm&index=10">How to install a theme</a></p>
+<ul>
+<li>Themes folder contains a collection of styling content for the website.  </li>
+<li>The default theme include with Hexo is <strong>Landscape</strong>.  </li>
+<li>Themes can be customized or created from scratch.  </li>
+<li>Theme configs: <strong>&#x2F;_config.landscape.yml</strong></li>
+</ul>
+<h2 id="config-yml"><a href="#config-yml" class="headerlink" title="config.yml"></a>config.yml</h2><hr>
+<p>Configures various aspects of the site.<br><strong>e.g.</strong> <code>theme: landscape</code></p>
+<p>Set a url config to your actuall hosting site</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url: https://jaxsbr.github.io/pkb-blog/</span><br></pre></td></tr></table></figure>
+
+<p>I’m yet to determine how to set the config to work both locally and deployed.<br>Here’s my temporary solution.  </p>
+<p>Local</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#root: ./</span><br></pre></td></tr></table></figure>
+<p>Deployed</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root: ./</span><br></pre></td></tr></table></figure>
+
+<h2 id="Posts-Drafts-amp-Pages"><a href="#Posts-Drafts-amp-Pages" class="headerlink" title="Posts, Drafts &amp; Pages"></a>Posts, Drafts &amp; Pages</h2><hr>
+<h3 id="Post"><a href="#Post" class="headerlink" title="Post"></a>Post</h3><p>Create a new post in the source&#x2F;_posts directory. This automatically shows in your site.<br><code>hexo new &#123;post name&#125;</code>  </p>
+<p>A URL is specified for new post inthis format:<br><strong><a target="_blank" rel="noopener" href="http://baseaddress/year/mo/dy/postname">http://baseAddress/year/mo/dy/postname</a></strong></p>
+<h3 id="Draft"><a href="#Draft" class="headerlink" title="Draft"></a>Draft</h3><p>You can also create draft posts. These arent’ show by default when launch the Hexo server.<br><code>hexo new draft &#123;draft post name&#125;</code></p>
+<p>To show drafts, run the server with this argument:<br><code>hexo server --draft</code></p>
+<p>Publish a draft (from _draft to _post):<br><code>hexo publish &#123;draft post name&#125;</code></p>
+<h3 id="Page"><a href="#Page" class="headerlink" title="Page"></a>Page</h3><p>Creating a new page with Hexo, results in a new folder in the code structure.<br><strong>&#x2F;source&#x2F;{your page name}</strong><br><code>hexo new page &#123;your page name&#125;</code></p>
+<p>You also have to directly access the URL (no data format):<br><strong><a target="_blank" rel="noopener" href="http://baseaddress/MyPage">http://baseAddress/MyPage</a></strong></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jaxsbr.github.io/pkb-blog/2022/05/04/hexo-basics/" data-id="cl2qo86m300006sr817e1h350" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-getting-started-hexo" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="./2022/04/30/getting-started-hexo/" class="article-date">
+  <time class="dt-published" datetime="2022-04-29T18:31:15.871Z" itemprop="datePublished">2022-04-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="./2022/04/30/getting-started-hexo/">Getting Started With Hexo</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>Official landing page <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a> .</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jaxsbr.github.io/pkb-blog/2022/04/30/getting-started-hexo/" data-id="cl2krwue30001qkr8dp3d2st9" data-title="Getting Started With Hexo" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/Blog/" rel="tag">Blog</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/Hexo/" rel="tag">Hexo</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="./tags/Blog/" rel="tag">Blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/Hexo/" rel="tag">Hexo</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="./tags/Blog/" style="font-size: 10px;">Blog</a> <a href="./tags/Hexo/" style="font-size: 10px;">Hexo</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="./archives/2022/05/">May 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2022/04/">April 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="./2022/05/04/hexo-basics/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="./2022/04/30/getting-started-hexo/">Getting Started With Hexo</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="./" class="mobile-nav-link">Home</a>
+  
+    <a href="./archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="./js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="./fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="./js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
