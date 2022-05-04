@@ -134,7 +134,14 @@
 <p>Publish a draft (from _draft to _post):<br><code>hexo publish &#123;draft post name&#125;</code></p>
 <h3 id="Page"><a href="#Page" class="headerlink" title="Page"></a>Page</h3><p>Creating a new page with Hexo, results in a new folder in the code structure.<br><strong>&#x2F;source&#x2F;{your page name}</strong><br><code>hexo new page &#123;your page name&#125;</code></p>
 <p>You also have to directly access the URL (no data format):<br><strong><a target="_blank" rel="noopener" href="http://baseaddress/MyPage">http://baseAddress/MyPage</a></strong></p>
+<h2 id="Generate-amp-amp-Deploy"><a href="#Generate-amp-amp-Deploy" class="headerlink" title="Generate &amp;&amp; Deploy"></a>Generate &amp;&amp; Deploy</h2><p>We run the generate command to convert the markdown and other content to publishable website content.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo generate</span><br></pre></td></tr></table></figure>
 
+<p><a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment">Deploy Documentation</a><br>Once we have website content, we can publish directly to Github.<br>First I had to update the <strong>_config.yml</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: &#x27;git&#x27;</span><br><span class="line">  repo: &#x27;https://github.com/Jaxsbr/pkb-blog.git&#x27;</span><br><span class="line">  branch: main</span><br></pre></td></tr></table></figure>
+
+<p>Secondly I had to install a package the aids in git commits.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
       
     </div>
     <footer class="article-footer">
