@@ -9,19 +9,19 @@
   <meta name="description" content="Hexo BasicsHexo is a static site generator. Mike Dane - Hexo Tutorial Series Instalation installationdoc Add the hexo-cli tool globaly   1npm install -g hexo-cli  You can install the package instead,">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/2022/05/04/hexo-basics/index.html">
+<meta property="og:url" content="https://jaxsbr.github.io/2022/05/04/hexo-basics/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="Hexo BasicsHexo is a static site generator. Mike Dane - Hexo Tutorial Series Instalation installationdoc Add the hexo-cli tool globaly   1npm install -g hexo-cli  You can install the package instead,">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-05-03T21:36:17.462Z">
-<meta property="article:modified_time" content="2022-05-04T01:41:13.709Z">
+<meta property="article:modified_time" content="2022-05-15T18:41:19.878Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
-    <link rel="alternate" href="https://jaxsbr.github.io/pkb-blog/atom.xml" title="Hexo" type="application/atom+xml">
+    <link rel="alternate" href="/pkb-blog/atom.xml" title="Hexo" type="application/atom+xml">
   
   
-    <link rel="shortcut icon" href="https://jaxsbr.github.io/pkb-blog/favicon.png">
+    <link rel="shortcut icon" href="/pkb-blog/favicon.png">
   
   
     
@@ -29,11 +29,11 @@
 
   
   
-<link rel="stylesheet" href="https://jaxsbr.github.io/pkb-blog/css/style.css">
+<link rel="stylesheet" href="/pkb-blog/css/style.css">
 
   
     
-<link rel="stylesheet" href="https://jaxsbr.github.io/pkb-blog/fancybox/jquery.fancybox.min.css">
+<link rel="stylesheet" href="/pkb-blog/fancybox/jquery.fancybox.min.css">
 
   
 <meta name="generator" content="Hexo 6.1.0"></head>
@@ -46,7 +46,7 @@
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a target="_blank" rel="noopener" href="https://jaxsbr.github.io/pkb-blog/" id="logo">Hexo</a>
+        <a href="/pkb-blog/" id="logo">Hexo</a>
       </h1>
       
     </div>
@@ -54,19 +54,19 @@
       <nav id="main-nav">
         <a id="main-nav-toggle" class="nav-icon"></a>
         
-          <a class="main-nav-link" target="_blank" rel="noopener" href="https://jaxsbr.github.io/pkb-blog/">Home</a>
+          <a class="main-nav-link" href="/pkb-blog/">Home</a>
         
-          <a class="main-nav-link" target="_blank" rel="noopener" href="https://jaxsbr.github.io/pkb-blog/archives">Archives</a>
+          <a class="main-nav-link" href="/pkb-blog/archives">Archives</a>
         
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" target="_blank" rel="noopener" href="https://jaxsbr.github.io/pkb-blog/atom.xml" title="RSS Feed"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/pkb-blog/atom.xml" title="RSS Feed"></a>
         
         <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jaxsbr.github.io"></form>
       </div>
     </div>
   </div>
@@ -75,7 +75,7 @@
       <div class="outer">
         <section id="main"><article id="post-hexo-basics" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a target="_blank" rel="noopener" href="https://jaxsbr.github.io/pkb-blog/2022/05/04/hexo-basics/" class="article-date">
+    <a href="/pkb-blog/2022/05/04/hexo-basics/" class="article-date">
   <time class="dt-published" datetime="2022-05-03T21:36:17.462Z" itemprop="datePublished">2022-05-04</time>
 </a>
     
@@ -120,14 +120,9 @@
 <h2 id="config-yml"><a href="#config-yml" class="headerlink" title="config.yml"></a>config.yml</h2><hr>
 <p>Configures various aspects of the site.<br><strong>e.g.</strong> <code>theme: landscape</code></p>
 <p>Set a url config to your actuall hosting site</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url: https://jaxsbr.github.io/pkb-blog/</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url: https://yourhostingsite</span><br></pre></td></tr></table></figure>
 
-<p>I’m yet to determine how to set the config to work both locally and deployed.<br>Here’s my temporary solution.  </p>
-<p>Local</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#root: ./</span><br></pre></td></tr></table></figure>
-<p>Deployed</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root: ./</span><br></pre></td></tr></table></figure>
-
+<p>I have a github.io space where my personal wesite lives. I want my blog to live in a sub page in another repository. To configure this I did the following:<br>set the <code>url:</code> to <a href="https://jaxsbr.github.io/">https://jaxsbr.github.io/</a><br>set the <code>root:</code> to &#x2F;pkb-blog</p>
 <h2 id="Posts-Drafts-amp-Pages"><a href="#Posts-Drafts-amp-Pages" class="headerlink" title="Posts, Drafts &amp; Pages"></a>Posts, Drafts &amp; Pages</h2><hr>
 <h3 id="Post"><a href="#Post" class="headerlink" title="Post"></a>Post</h3><p>Create a new post in the source&#x2F;_posts directory. This automatically shows in your site.<br><code>hexo new &#123;post name&#125;</code>  </p>
 <p>A URL is specified for new post inthis format:<br><strong><a target="_blank" rel="noopener" href="http://baseaddress/year/mo/dy/postname">http://baseAddress/year/mo/dy/postname</a></strong></p>
@@ -139,6 +134,9 @@
 <h2 id="Generate-amp-amp-Deploy"><a href="#Generate-amp-amp-Deploy" class="headerlink" title="Generate &amp;&amp; Deploy"></a>Generate &amp;&amp; Deploy</h2><p>We run the generate command to convert the markdown and other content to publishable website content.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo generate</span><br></pre></td></tr></table></figure>
 
+<p>You can configure where the content is output to by setting the <code>public_dir:</code> property in <strong>_config.yml</strong> file.<br>e.g. Note, I use a sub path to simulate what my directory looks like when live</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public_dir: public/pkb-blog</span><br></pre></td></tr></table></figure>
+
 <p><a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment">Deploy Documentation</a><br>Once we have website content, we can publish directly to Github.<br>First I had to update the <strong>_config.yml</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: &#x27;git&#x27;</span><br><span class="line">  repo: &#x27;https://github.com/Jaxsbr/pkb-blog.git&#x27;</span><br><span class="line">  branch: main</span><br></pre></td></tr></table></figure>
 
@@ -147,7 +145,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/05/04/hexo-basics/" data-id="cl2qo86m300006sr817e1h350" data-title="" class="article-share-link">Share</a>
+      <a data-url="https://jaxsbr.github.io/2022/05/04/hexo-basics/" data-id="cl2qo86m300006sr817e1h350" data-title="" class="article-share-link">Share</a>
       
       
       
@@ -158,7 +156,7 @@
 <nav id="article-nav">
   
   
-    <a target="_blank" rel="noopener" href="https://jaxsbr.github.io/pkb-blog/2022/04/30/getting-started-hexo/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/pkb-blog/2022/04/30/getting-started-hexo/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">Getting Started With Hexo</div>
     </a>
@@ -180,7 +178,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" target="_blank" href="https://jaxsbr.github.io/pkb-blog/tags/Blog/" rel="tag noopener">Blog</a></li><li class="tag-list-item"><a class="tag-list-link" target="_blank" href="https://jaxsbr.github.io/pkb-blog/tags/Hexo/" rel="tag noopener">Hexo</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Blog/" rel="tag">Blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Hexo/" rel="tag">Hexo</a></li></ul>
     </div>
   </div>
 
@@ -190,7 +188,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a target="_blank" rel="noopener" href="https://jaxsbr.github.io/pkb-blog/tags/Blog/" style="font-size: 10px;">Blog</a> <a target="_blank" rel="noopener" href="https://jaxsbr.github.io/pkb-blog/tags/Hexo/" style="font-size: 10px;">Hexo</a>
+      <a href="/pkb-blog/tags/Blog/" style="font-size: 10px;">Blog</a> <a href="/pkb-blog/tags/Hexo/" style="font-size: 10px;">Hexo</a>
     </div>
   </div>
 
@@ -199,7 +197,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" target="_blank" rel="noopener" href="https://jaxsbr.github.io/pkb-blog/archives/2022/05/">May 2022</a></li><li class="archive-list-item"><a class="archive-list-link" target="_blank" rel="noopener" href="https://jaxsbr.github.io/pkb-blog/archives/2022/04/">April 2022</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/05/">May 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/04/">April 2022</a></li></ul>
     </div>
   </div>
 
@@ -212,11 +210,11 @@
       <ul>
         
           <li>
-            <a target="_blank" rel="noopener" href="https://jaxsbr.github.io/pkb-blog/2022/05/04/hexo-basics/">(no title)</a>
+            <a href="/pkb-blog/2022/05/04/hexo-basics/">(no title)</a>
           </li>
         
           <li>
-            <a target="_blank" rel="noopener" href="https://jaxsbr.github.io/pkb-blog/2022/04/30/getting-started-hexo/">Getting Started With Hexo</a>
+            <a href="/pkb-blog/2022/04/30/getting-started-hexo/">Getting Started With Hexo</a>
           </li>
         
       </ul>
@@ -241,25 +239,25 @@
     </div>
     <nav id="mobile-nav">
   
-    <a target="_blank" rel="noopener" href="https://jaxsbr.github.io/pkb-blog/" class="mobile-nav-link">Home</a>
+    <a href="/pkb-blog/" class="mobile-nav-link">Home</a>
   
-    <a target="_blank" rel="noopener" href="https://jaxsbr.github.io/pkb-blog/archives" class="mobile-nav-link">Archives</a>
+    <a href="/pkb-blog/archives" class="mobile-nav-link">Archives</a>
   
 </nav>
     
 
 
-<script src="https://jaxsbr.github.io/pkb-blog/js/jquery-3.4.1.min.js"></script>
+<script src="/pkb-blog/js/jquery-3.4.1.min.js"></script>
 
 
 
   
-<script src="https://jaxsbr.github.io/pkb-blog/fancybox/jquery.fancybox.min.js"></script>
+<script src="/pkb-blog/fancybox/jquery.fancybox.min.js"></script>
 
 
 
 
-<script src="https://jaxsbr.github.io/pkb-blog/js/script.js"></script>
+<script src="/pkb-blog/js/script.js"></script>
 
 
 
