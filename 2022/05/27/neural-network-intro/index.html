@@ -6,15 +6,15 @@
   
   <title>Neural Networks For This Dummy - DRAFT | Personal Knowledgebase Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="I’m really interested in AI and Machine learning. This will be the start of a long journey of discovery. Goals Build a simple neural network in C# and make it do something Learn from the sample and ex">
+  <meta name="description" content="I’m really interested in AI and Machine learning. I’ve been curious about neural networks for quite some time, especially since they try to simulate how the human brain works Goals Understand the how">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Neural Networks For This Dummy - DRAFT">
 <meta property="og:url" content="https://jaxsbr.github.io/2022/05/27/neural-network-intro/index.html">
 <meta property="og:site_name" content="Personal Knowledgebase Blog">
-<meta property="og:description" content="I’m really interested in AI and Machine learning. This will be the start of a long journey of discovery. Goals Build a simple neural network in C# and make it do something Learn from the sample and ex">
+<meta property="og:description" content="I’m really interested in AI and Machine learning. I’ve been curious about neural networks for quite some time, especially since they try to simulate how the human brain works Goals Understand the how">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-05-26T23:32:11.000Z">
-<meta property="article:modified_time" content="2022-05-27T04:08:41.155Z">
+<meta property="article:modified_time" content="2022-06-04T20:09:45.352Z">
 <meta property="article:author" content="jacobus brink">
 <meta property="article:tag" content="AI">
 <meta property="article:tag" content="Artificial Intelligence">
@@ -101,31 +101,43 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>I’m really interested in AI and Machine learning. This will be the start of a long journey of discovery.</p>
+        <p>I’m really interested in AI and Machine learning. I’ve been curious about neural networks for quite some time, especially since they try to simulate how the human brain works</p>
 <h2 id="Goals"><a href="#Goals" class="headerlink" title="Goals"></a>Goals</h2><ul>
-<li>Build a simple neural network in C# and make it do something</li>
-<li>Learn from the sample and expand</li>
+<li>Understand the how Neurons and Synapses work together</li>
+<li>Understand how a network can makes accurate predictions</li>
+<li>Build a prediction system that acts on custom attributes</li>
+<li>Bonus goal, make is visual</li>
 </ul>
-<h2 id="How-it-works"><a href="#How-it-works" class="headerlink" title="How it works"></a>How it works</h2><h3 id="Network"><a href="#Network" class="headerlink" title="Network"></a>Network</h3><p>Consists of input, hidden and output layers.<br>A layers is collection of nodes that contain a value.<br>Nodes connect to nodes in other layers via a synapses.<br>A sysnapses contains a weight value.</p>
-<h3 id="Formula"><a href="#Formula" class="headerlink" title="Formula"></a>Formula</h3><p>x &#x3D; input (node)<br>w &#x3D; weight (synapses)<br>b &#x3D; bias<br>wtx &#x3D; (x1 * w1) + (x2 * w2) (total input)<br>z &#x3D; wtx + b<br>a &#x3D; σ(z) (sigmoid activation)</p>
-<h3 id="Activation-function"><a href="#Activation-function" class="headerlink" title="Activation function"></a>Activation function</h3><p>An activation function is used the process the total inputs.<br>There are different types:</p>
-<ul>
-<li>Step function (if out put is &gt; 1 trigger the next neuron)</li>
-<li>Sigmoid</li>
+<h2 id="Idea-Bug-Bash-🐛"><a href="#Idea-Bug-Bash-🐛" class="headerlink" title="Idea - Bug Bash 🐛"></a>Idea - Bug Bash 🐛</h2><h3 id="What-shall-we-predict"><a href="#What-shall-we-predict" class="headerlink" title="What shall we predict?"></a>What shall we predict?</h3><p>Given two insects, each with different attributes, which is most likely to win in a fight?</p>
+<h3 id="How-will-this-work"><a href="#How-will-this-work" class="headerlink" title="How will this work?"></a>How will this work?</h3><p>Attributes will have weight values that when summed creates a score.<br>The higher the score, the more likely to win.<br>The neural network will Not know about this score however, rather, only which attributes the insect has.<br>Given training data containing the attributes of both insects and a value to indicate the selected victor, the network should be able to identify a pattern and start accurately predicting results.</p>
+<h3 id="Attributes"><a href="#Attributes" class="headerlink" title="Attributes"></a>Attributes</h3><ul>
+<li>Strength &#x3D; 25</li>
+<li>Speed &#x3D; 15</li>
+<li>Toughness &#x3D; 10</li>
+<li>Rested &#x3D; 5</li>
 </ul>
+<h3 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h3><p>1 &#x3D; yes the insect has this attribute<br>0 &#x3D; no the insect does not have this attribute<br><strong>[strength, speed, toughness, rested]</strong></p>
+<p>InsectA &#x3D; A<br>[1, 0, 1, 0] &#x3D; strong, slow, tough and tired<br>score &#x3D; 35 (25 + 0 + 10 + 0)</p>
+<p>InsectB &#x3D; B<br>[0, 1, 0, 1] &#x3D; weak, fast, fragile and rested<br>score &#x3D; 15 (0 + 15 + 0 + 5)</p>
+<p>Result &#x3D; A &gt; B (Insest A should win)</p>
+<h3 id="How-will-we-feed-the-network-this-info"><a href="#How-will-we-feed-the-network-this-info" class="headerlink" title="How will we feed the network this info?"></a>How will we feed the network this info?</h3><p>Note: below is an exaple of the input structure, not total input.<br>We will need to give the network more than one example in order to train correctly</p>
+<p><strong>Training Input</strong><br>InsectA [1, 0, 1, 0] + InsectB [0, 1, 0, 1]<br>Input &#x3D; [1, 0, 1, 0, 0, 1, 0, 1]</p>
+<p><strong>Training Expected Output</strong><br>0 &#x3D; InsectA won<br>1 &#x3D; InsectB won</p>
+<h3 id="Test-if-it-works"><a href="#Test-if-it-works" class="headerlink" title="Test if it works"></a>Test if it works</h3><p>Create a new insects with attributes combinations the network has not seen yet.<br>Run the networks predic opperation with this input and determine if it predicts the victor correctly.</p>
+<h2 id="How-it-works"><a href="#How-it-works" class="headerlink" title="How it works"></a>How it works</h2><h3 id="Network"><a href="#Network" class="headerlink" title="Network"></a>Network</h3><p>A neural network simulated in code, consists of input, hidden and output layers.<br>Input layers receive the initial values you provide the systems.<br>Hidden layers pass values from input to output layers or to other hidden layers.<br>Output layers receive the results of the networks caluclation and outputs.</p>
+<p>A layers is collection of neurons that contain a value.<br>Neurons connect to other neurons in other layers via a synapses.<br>A sysnapses contains a weight value.<br>As the neuron passes it’s value through the synapses the value is modified (value * weight).<br>Neurons receiving modified values, will pass this value throught an activation function.<br>Depending on the value returned from the activation function, we can either block or pass the a next neuron call.</p>
+<h3 id="Formula"><a href="#Formula" class="headerlink" title="Formula"></a>Formula</h3><p>x &#x3D; input (neuron)<br>w &#x3D; weight (synapse)<br>b &#x3D; bias<br>wtx &#x3D; (x1 * w1) + (x2 * w2) (total input)<br>z &#x3D; wtx + b<br>a &#x3D; σ(z) (sigmoid activation)</p>
 <h3 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h3><ul>
 <li>We need to know what the desired output is give a particular set of inputs</li>
 <li>Randomise starting weights</li>
 <li>Compare the actual output with the desired output</li>
 <li>Make small weight adjustments to compensate for the incorrect output</li>
-<li>Rince and repeat untill the neural network is trained. (achieves the desirect output)</li>
+<li>Rince and repeat untill the neural network is trained.</li>
+<li>The network should now have the appropriate weights to predict acuratly when provided with similar input as the training data.</li>
 </ul>
-<p>NOTE: the training “experience” lives in the weights of the synapses. This is what we would store pre populate to use a pre trained network.</p>
+<p>NOTE: the training “experience” lives in the weights of the synapses. This is what we would store to create pre trained networks.</p>
 <h3 id="Weighed-Derivative-Formula"><a href="#Weighed-Derivative-Formula" class="headerlink" title="Weighed Derivative Formula"></a>Weighed Derivative Formula</h3><p>But how much should we adjust the weights by when the output is incorrect?</p>
 <p>adjust weights by &#x3D; error.input.output.(1 - output) <em>add this to all synapses</em><br>error &#x3D; desired result - actual result<br>input &#x3D; what we pass into the input layer nodes<br>sigmoid gradient curve &#x3D; output.(1 - output)</p>
-<h2 id="Resources"><a href="#Resources" class="headerlink" title="Resources"></a>Resources</h2><p><a target="_blank" rel="noopener" href="https://medium.com/analytics-vidhya/building-a-simple-neural-network-in-c-7e917e9fc2cc">https://medium.com/analytics-vidhya/building-a-simple-neural-network-in-c-7e917e9fc2cc</a><br><a target="_blank" rel="noopener" href="https://github.com/lschmittalves/simple-neural-network">https://github.com/lschmittalves/simple-neural-network</a>  </p>
-<p>inspiration for the one above:<br><a target="_blank" rel="noopener" href="https://medium.com/deep-learning-101/how-to-generate-a-video-of-a-neural-network-learning-in-python-62f5c520e85c">https://medium.com/deep-learning-101/how-to-generate-a-video-of-a-neural-network-learning-in-python-62f5c520e85c</a></p>
-<h3 id="Acronyms"><a href="#Acronyms" class="headerlink" title="Acronyms"></a>Acronyms</h3><p><strong>DNN</strong> - Deep Neural Network<br><strong>RNN</strong> - Recurrent Neural Network<br><strong>CNN</strong> - Convolution Neural Network<br><strong>FNN</strong> - Feed-forward Neural Network</p>
 
       
     </div>
