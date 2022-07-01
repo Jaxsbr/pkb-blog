@@ -13,8 +13,9 @@
 <meta property="og:site_name" content="Personal Knowledgebase Blog">
 <meta property="og:description" content="I’m really interested in AI and Machine learning. I’ve been curious about neural networks for quite some time, especially since they try to simulate how the human brain works Goals Understand the how">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://jaxsbr.github.io/pkb-blog/images/NN.png">
 <meta property="article:published_time" content="2022-05-26T23:32:11.000Z">
-<meta property="article:modified_time" content="2022-06-08T18:11:33.713Z">
+<meta property="article:modified_time" content="2022-07-01T04:29:13.996Z">
 <meta property="article:author" content="jacobus brink">
 <meta property="article:tag" content="AI">
 <meta property="article:tag" content="Artificial Intelligence">
@@ -23,6 +24,7 @@
 <meta property="article:tag" content="C#">
 <meta property="article:tag" content="Neural Networks">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jaxsbr.github.io/pkb-blog/images/NN.png">
   
     <link rel="alternate" href="/pkb-blog/atom.xml" title="Personal Knowledgebase Blog" type="application/atom+xml">
   
@@ -132,6 +134,8 @@
 <p>I do however feel more comfortable about the topic and thus satisfied with this effort.</p>
 <h2 id="How-it-works"><a href="#How-it-works" class="headerlink" title="How it works"></a>How it works</h2><h3 id="Network"><a href="#Network" class="headerlink" title="Network"></a>Network</h3><p>A neural network simulated in code, consists of input, hidden and output layers.<br>Input layers receive the initial values you provide the systems.<br>Hidden layers pass values from input to output layers or to other hidden layers.<br>Output layers receive the results of the networks caluclation and outputs.</p>
 <p>A layers is collection of neurons that contain a value.<br>Neurons connect to other neurons in other layers via a synapses.<br>A sysnapses contains a weight value.<br>As the neuron passes it’s value through the synapses the value is modified (value * weight).<br>Neurons receiving modified values, will pass this value throught an activation function.<br>Depending on the value returned from the activation function, we can either block or pass the a next neuron call.</p>
+<img src="/pkb-blog/images/NN.png"/>
+
 <h3 id="Formula"><a href="#Formula" class="headerlink" title="Formula"></a>Formula</h3><p>x &#x3D; input (neuron)<br>w &#x3D; weight (synapse)<br>b &#x3D; bias<br>wtx &#x3D; (x1 * w1) + (x2 * w2) (total input)<br>z &#x3D; wtx + b<br>a &#x3D; σ(z) (sigmoid activation)</p>
 <h3 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h3><ul>
 <li>We need to know what the desired output is give a particular set of inputs</li>
@@ -142,7 +146,7 @@
 <li>The network should now have the appropriate weights to predict acuratly when provided with similar input as the training data.</li>
 </ul>
 <p>NOTE: the training “experience” lives in the weights of the synapses. This is what we would store to create pre trained networks.</p>
-<h3 id="Weighed-Derivative-Formula"><a href="#Weighed-Derivative-Formula" class="headerlink" title="Weighed Derivative Formula"></a>Weighed Derivative Formula</h3><p>But how much should we adjust the weights by when the output is incorrect?</p>
+<h3 id="Weighted-Derivative-Formula"><a href="#Weighted-Derivative-Formula" class="headerlink" title="Weighted Derivative Formula"></a>Weighted Derivative Formula</h3><p>But how much should we adjust the weights by when the output is incorrect?</p>
 <p>adjust weights by &#x3D; error.input.output.(1 - output) <em>add this to all synapses</em><br>error &#x3D; desired result - actual result<br>input &#x3D; what we pass into the input layer nodes<br>sigmoid gradient curve &#x3D; output.(1 - output)</p>
 
       
