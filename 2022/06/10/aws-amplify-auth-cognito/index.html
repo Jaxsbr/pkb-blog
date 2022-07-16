@@ -14,7 +14,7 @@
 <meta property="og:description" content="AWS Amplify takes away a lot of the heavy lifting around hosting and deploying single page applications (SPA). But an application is useless if we can’t control user access to it. OverviewThis post de">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-06-10T03:10:21.000Z">
-<meta property="article:modified_time" content="2022-06-10T03:19:15.781Z">
+<meta property="article:modified_time" content="2022-07-16T19:17:28.894Z">
 <meta property="article:author" content="jacobus brink">
 <meta property="article:tag" content="AWS">
 <meta property="article:tag" content="Amplify">
@@ -153,13 +153,19 @@
 
 <h3 id="Configure-Amplify-App"><a href="#Configure-Amplify-App" class="headerlink" title="Configure Amplify App"></a>Configure Amplify App</h3><p>Select the Backend environments tab</p>
 <ul>
+<li>Initialy you have to click “Get Started” to enable the Backend tab. This takes a few minutes</li>
 <li>Click Launch Studio</li>
 <li>Go to the Set up &gt; Authentication tab<ul>
 <li>Add a login mechanism. (this is where you can specify federate login types. e.g. Google or Facebook). I chose a simple Email mechanism.</li>
+<li>Specify Sign-in &amp; sign-out URL’s. <ul>
+<li>This allows for multiple URLs. I specified both my local and production URL’s to allow login requirements for both environments.</li>
+</ul>
+</li>
 <li>You and also setup MFA and password rulese here. I opted for all the defaults, no MFA.</li>
 <li>Deploy</li>
 </ul>
 </li>
+<li>Save the new authentication setup. This will start a CloudFormation deployment.</li>
 <li>You can view the created authentication resouces in Cognito or CloudFormation.</li>
 </ul>
 <h3 id="Add-users-and-groups"><a href="#Add-users-and-groups" class="headerlink" title="Add users and groups"></a>Add users and groups</h3><p>While still in the Amplify Studio</p>
