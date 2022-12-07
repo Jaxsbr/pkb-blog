@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo Basics | Personal Knowledgebase Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="This blog was setup using Hexo. The following sections detail some of my learnings. So what is Hexo?Hexo is a static website site generator. You create blog entries using markdown language which Hexo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo Basics">
+<meta property="og:url" content="https://jaxsbr.github.io/2022/05/04/hexo-basics/index.html">
+<meta property="og:site_name" content="Personal Knowledgebase Blog">
+<meta property="og:description" content="This blog was setup using Hexo. The following sections detail some of my learnings. So what is Hexo?Hexo is a static website site generator. You create blog entries using markdown language which Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-05-03T21:00:00.000Z">
+<meta property="article:modified_time" content="2022-12-07T00:37:58.754Z">
+<meta property="article:author" content="jacobus brink">
+<meta property="article:tag" content="Hexo">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/pkb-blog/atom.xml" title="Personal Knowledgebase Blog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/pkb-blog/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/pkb-blog/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/pkb-blog/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/pkb-blog/" id="logo">Personal Knowledgebase Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/pkb-blog/">Home</a>
+        
+          <a class="main-nav-link" href="/pkb-blog/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/pkb-blog/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jaxsbr.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-hexo-basics" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/pkb-blog/2022/05/04/hexo-basics/" class="article-date">
+  <time class="dt-published" datetime="2022-05-03T21:00:00.000Z" itemprop="datePublished">2022-05-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Hexo Basics
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>This blog was setup using Hexo. The following sections detail some of my learnings.</p>
+<h3 id="So-what-is-Hexo"><a href="#So-what-is-Hexo" class="headerlink" title="So what is Hexo?"></a>So what is Hexo?</h3><p>Hexo is a static website site generator. You create blog entries using markdown language which Hexo will convert to website content (HTML, CSS) ready to be hosted.</p>
+<p>I followed a <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=Kt7u5kr_P5o&list=PLLAZ4kZ9dFpOMJR6D25ishrSedvsguVSm">tutorial series by Mike Dane</a> to get me up and running and also utilized the <a target="_blank" rel="noopener" href="https://hexo.io/docs/">official Hexo documentation</a>.</p>
+<h2 id="Instalation"><a href="#Instalation" class="headerlink" title="Instalation"></a>Instalation</h2><hr>
+<p>Add the hexo-cli tool globaly  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+
+<p>You can install the package instead, making the hexo commands only available within a project VS globaly anywhere.  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Getting-Started"><a href="#Getting-Started" class="headerlink" title="Getting Started"></a>Getting Started</h2><hr>
+<p>Creating the intial site.  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo init &#123;name of your site&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Running the site.  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo server</span><br></pre></td></tr></table></figure>
+
+<h2 id="Scaffolds"><a href="#Scaffolds" class="headerlink" title="Scaffolds"></a>Scaffolds</h2><hr>
+<p>Scaffolds folder contains template markdown files.<br>These files acts as the starting file when creating new post, drafts or pages.  </p>
+<p>You can create custom scaffolds by adding new <strong>.md</strong> files in the <strong>_scaffolds</strong> folder.</p>
+<h2 id="Source"><a href="#Source" class="headerlink" title="Source"></a>Source</h2><hr>
+<p>Source folder contains all your blog content content.<br><em><strong>e.g hexo-basics.md</strong></em></p>
+<h2 id="Themes"><a href="#Themes" class="headerlink" title="Themes"></a>Themes</h2><hr>
+<p><a target="_blank" rel="noopener" href="https://hexo.io/themes/">Official Hexo themes</a><br><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=A-muxF_6plc&list=PLLAZ4kZ9dFpOMJR6D25ishrSedvsguVSm&index=10">How to install a theme</a></p>
+<ul>
+<li>Themes folder contains a collection of styling content for the website.  </li>
+<li>The default theme include with Hexo is <strong>Landscape</strong>.  </li>
+<li>Themes can be customized or created from scratch.  </li>
+<li>Theme configs: <strong>&#x2F;_config.landscape.yml</strong></li>
+</ul>
+<h2 id="config-yml"><a href="#config-yml" class="headerlink" title="config.yml"></a>config.yml</h2><hr>
+<p>Configures various aspects of the site.<br><strong>e.g.</strong> <code>theme: landscape</code></p>
+<p>Set a url config to your actuall hosting site</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url: https://yourhostingsite</span><br></pre></td></tr></table></figure>
+
+<p>I have a github.io space where my personal wesite lives. I want my blog to live as a sub page, with the content served from a different repository than the main site. To configure this I did the following:<br>set the <code>url:</code> to <a href="https://jaxsbr.github.io/">https://jaxsbr.github.io/</a><br>set the <code>root:</code> to &#x2F;pkb-blog</p>
+<h2 id="Posts-Drafts-amp-Pages"><a href="#Posts-Drafts-amp-Pages" class="headerlink" title="Posts, Drafts &amp; Pages"></a>Posts, Drafts &amp; Pages</h2><hr>
+<h3 id="Post"><a href="#Post" class="headerlink" title="Post"></a>Post</h3><p>Create a new post in the source&#x2F;_posts directory. This automatically shows in your site.  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new &#123;post name&#125;</span><br></pre></td></tr></table></figure>
+
+<p>A URL is specified for new post inthis format:<br><strong><a target="_blank" rel="noopener" href="http://baseaddress/year/mo/dy/postname">http://baseAddress/year/mo/dy/postname</a></strong></p>
+<h3 id="Draft"><a href="#Draft" class="headerlink" title="Draft"></a>Draft</h3><p>You can also create draft posts. These arent’ show by default when launch the Hexo server.  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new draft &#123;draft post name&#125;</span><br></pre></td></tr></table></figure>
+
+<p>To show drafts, run the server with this argument:  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo server --draft</span><br></pre></td></tr></table></figure>
+
+<p>Publish a draft (from _draft to _post):  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo publish &#123;draft post name&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Page"><a href="#Page" class="headerlink" title="Page"></a>Page</h3><p>Creating a new page with Hexo, results in a new folder in the code structure.<br><strong>&#x2F;source&#x2F;{your page name}</strong>  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new page &#123;your page name&#125;</span><br></pre></td></tr></table></figure>
+
+<p>You can access this directly, without a date format as seen with new posts above:<br><strong><a target="_blank" rel="noopener" href="http://baseaddress/MyPage">http://baseAddress/MyPage</a></strong></p>
+<h2 id="Generate-and-Deploy"><a href="#Generate-and-Deploy" class="headerlink" title="Generate and Deploy"></a>Generate and Deploy</h2><p>We run the generate command to convert the markdown and other content to publishable website content.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo generate</span><br><span class="line">hexo g</span><br></pre></td></tr></table></figure>
+
+<p>You can configure where the content is output to by setting the <code>public_dir:</code> property in <strong>_config.yml</strong> file.<br>e.g. Note, I use a sub path to simulate what my directory looks like when live</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public_dir: public/pkb-blog</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment">Deploy Documentation</a><br>Once we have website content, we can publish directly to Github.<br>First I had to update the <strong>_config.yml</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: &#x27;git&#x27;</span><br><span class="line">  repo: &#x27;https://github.com/Jaxsbr/pkb-blog.git&#x27;</span><br><span class="line">  branch: main</span><br></pre></td></tr></table></figure>
+
+<p>Secondly I had to install a package the aids in git commits.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+
+<p>To deploy we run</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo deploy</span><br></pre></td></tr></table></figure>
+
+<h2 id="Time-Saver"><a href="#Time-Saver" class="headerlink" title="Time Saver"></a>Time Saver</h2><p>Once all of the above is setup and you only need to create content, using the following step will optimize your workflow.</p>
+<ol>
+<li>Make you markdown change (actual blog content)</li>
+<li>Run <code>hexo server</code> and preview changes</li>
+<li>Run <code>hexo g -d</code> to both generate and deploy live</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jaxsbr.github.io/2022/05/04/hexo-basics/" data-id="clbcxh3h9000420rvfnofhbcb" data-title="Hexo Basics" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Hexo/" rel="tag">Hexo</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/pkb-blog/2022/05/19/host-a-static-website-with-aws-s3/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          How to host a static website with AWS S3
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/API-Gateway/" rel="tag">API Gateway</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AWS/" rel="tag">AWS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AWS-Lambda/" rel="tag">AWS Lambda</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Amazon-API-Gateway/" rel="tag">Amazon API Gateway</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Amplify/" rel="tag">Amplify</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Artificial-Intelligence/" rel="tag">Artificial Intelligence</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Bash/" rel="tag">Bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Boto3/" rel="tag">Boto3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/C/" rel="tag">C#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/CloudFormation/" rel="tag">CloudFormation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Cognito/" rel="tag">Cognito</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/DynamoDB/" rel="tag">DynamoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/ML/" rel="tag">ML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Machine-Learning/" rel="tag">Machine Learning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Neural-Networks/" rel="tag">Neural Networks</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Rate-limiting/" rel="tag">Rate limiting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/React/" rel="tag">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/S3/" rel="tag">S3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/SPA/" rel="tag">SPA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Script/" rel="tag">Script</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Signed-Url/" rel="tag">Signed Url</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Static-Website-Hosting/" rel="tag">Static Website Hosting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Throttling/" rel="tag">Throttling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/nodejs/" rel="tag">nodejs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/nvm/" rel="tag">nvm</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/pkb-blog/tags/AI/" style="font-size: 10px;">AI</a> <a href="/pkb-blog/tags/API-Gateway/" style="font-size: 10px;">API Gateway</a> <a href="/pkb-blog/tags/AWS/" style="font-size: 20px;">AWS</a> <a href="/pkb-blog/tags/AWS-Lambda/" style="font-size: 10px;">AWS Lambda</a> <a href="/pkb-blog/tags/Amazon-API-Gateway/" style="font-size: 10px;">Amazon API Gateway</a> <a href="/pkb-blog/tags/Amplify/" style="font-size: 10px;">Amplify</a> <a href="/pkb-blog/tags/Artificial-Intelligence/" style="font-size: 10px;">Artificial Intelligence</a> <a href="/pkb-blog/tags/Bash/" style="font-size: 10px;">Bash</a> <a href="/pkb-blog/tags/Boto3/" style="font-size: 10px;">Boto3</a> <a href="/pkb-blog/tags/C/" style="font-size: 10px;">C#</a> <a href="/pkb-blog/tags/CloudFormation/" style="font-size: 10px;">CloudFormation</a> <a href="/pkb-blog/tags/Cognito/" style="font-size: 15px;">Cognito</a> <a href="/pkb-blog/tags/DynamoDB/" style="font-size: 10px;">DynamoDB</a> <a href="/pkb-blog/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/pkb-blog/tags/ML/" style="font-size: 10px;">ML</a> <a href="/pkb-blog/tags/Machine-Learning/" style="font-size: 10px;">Machine Learning</a> <a href="/pkb-blog/tags/Neural-Networks/" style="font-size: 10px;">Neural Networks</a> <a href="/pkb-blog/tags/Python/" style="font-size: 10px;">Python</a> <a href="/pkb-blog/tags/Rate-limiting/" style="font-size: 10px;">Rate limiting</a> <a href="/pkb-blog/tags/React/" style="font-size: 10px;">React</a> <a href="/pkb-blog/tags/S3/" style="font-size: 15px;">S3</a> <a href="/pkb-blog/tags/SPA/" style="font-size: 10px;">SPA</a> <a href="/pkb-blog/tags/Script/" style="font-size: 10px;">Script</a> <a href="/pkb-blog/tags/Signed-Url/" style="font-size: 10px;">Signed Url</a> <a href="/pkb-blog/tags/Static-Website-Hosting/" style="font-size: 10px;">Static Website Hosting</a> <a href="/pkb-blog/tags/Throttling/" style="font-size: 10px;">Throttling</a> <a href="/pkb-blog/tags/nodejs/" style="font-size: 10px;">nodejs</a> <a href="/pkb-blog/tags/nvm/" style="font-size: 10px;">nvm</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/06/">June 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/05/">May 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/pkb-blog/2022/07/08/api-gateway-throttling/">Amazon API Gateway - Throttling</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2022/07/01/s3-signed-urls/">Sharing S3 files securely with Signed Urls</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2022/06/10/aws-amplify-auth-cognito/">AWS Amplify authentication with Cognito</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2022/06/10/node-version-toggle/">Toggle nodejs versions</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2022/05/27/neural-network-intro/">Neural Networks For This Dummy</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 jacobus brink<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/pkb-blog/" class="mobile-nav-link">Home</a>
+  
+    <a href="/pkb-blog/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/pkb-blog/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/pkb-blog/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/pkb-blog/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

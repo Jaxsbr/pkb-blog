@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Personal Knowledgebase Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Personal Knowledgebase Blog">
+<meta property="og:url" content="https://jaxsbr.github.io/index.html">
+<meta property="og:site_name" content="Personal Knowledgebase Blog">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="jacobus brink">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/pkb-blog/atom.xml" title="Personal Knowledgebase Blog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/pkb-blog/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/pkb-blog/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/pkb-blog/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/pkb-blog/" id="logo">Personal Knowledgebase Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/pkb-blog/">Home</a>
+        
+          <a class="main-nav-link" href="/pkb-blog/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/pkb-blog/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jaxsbr.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-api-gateway-throttling" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/pkb-blog/2022/07/08/api-gateway-throttling/" class="article-date">
+  <time class="dt-published" datetime="2022-07-08T03:28:49.000Z" itemprop="datePublished">2022-07-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/pkb-blog/2022/07/08/api-gateway-throttling/">Amazon API Gateway - Throttling</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h2><p>API Gateway provides me with great coordination and routing capabilities, but without the neccessary checks it can also put a big dent in my pocket. 💲💲💲  </p>
+<p>I often prototype ideas that don’t check the “production ready” criteria. This means that I can put something together quickly and have it meet my needs, but at the same time be vulnerable to accidental&#x2F;intentional over-use.  </p>
+<p>The post constains details on how throttling works and how to configure it, even for smaller projects. 😉</p>
+<h2 id="Request-submission-measurement"><a href="#Request-submission-measurement" class="headerlink" title="Request submission measurement"></a>Request submission measurement</h2><p>A “token bucket algorithm” is used to measure request submision rate.</p>
+<blockquote>
+<p>API Gateway doesn’t enforce a quota on concurrent connections. The maximum number of concurrent connections is determined by the rate of new connections per second and maximum connection duration of two hours. For example, with the default quota of 500 new connections per second, if clients connect at the maximum rate over two hours, API Gateway can serve up to 3,600,000 concurrent connections.</p>
+</blockquote>
+<h2 id="Request-measurement-types"><a href="#Request-measurement-types" class="headerlink" title="Request measurement types"></a>Request measurement types</h2><p>There are two types of usage clasification used to messure API requests, namely, steady-state and burst request.</p>
+<h4 id="Steady-State"><a href="#Steady-State" class="headerlink" title="Steady State"></a>Steady State</h4><p>A request per second (RPS) measure accross all API’s within an AWS account, per Region. This is what can be considered normal request rate traffic for your API endpoints. Also refered to as the <strong>token</strong>.</p>
+<h4 id="Burst"><a href="#Burst" class="headerlink" title="Burst"></a>Burst</h4><p>A maximum concurrent request rate accross all API’s within an AWS account, per Region. Typically and unexpected amount of request in a given period of time. Also refered to as the <strong>bucket</strong>.</p>
+<h2 id="Throttling-options"><a href="#Throttling-options" class="headerlink" title="Throttling options"></a>Throttling options</h2><p>API Gateway provides these options for configuring throttling:</p>
+<ul>
+<li>Account-level: All routes and stages use the same throttling limit</li>
+<li>Stage-level: All routes in the statge uses the same throttling limit</li>
+<li>Route-level: Only the individual route uses the configured throttling limit</li>
+</ul>
+<p>NOTE: the default route throttling limits can’t exceed the account-level rate limits, we have to configure explicitly to do so.</p>
+<h2 id="Limitation-and-quotas"><a href="#Limitation-and-quotas" class="headerlink" title="Limitation and quotas"></a>Limitation and quotas</h2><p>There is a cap of what limits can be set per account per region. This can however be adjusted via by reaching out to AWS Support Center.</p>
+<h2 id="So-what-does-the-API-caller-see-when-throttled"><a href="#So-what-does-the-API-caller-see-when-throttled" class="headerlink" title="So what does the API caller see when throttled?"></a>So what does the API caller see when throttled?</h2><p>They get back a <code>429 Too Many Requests</code> error response</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-request-throttling.html">Throttle API requests for better throughput</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-throttling.html">Throttling request to your HTTP API</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/limits.html">Amazon API Gateway quotas and important notes</a></li>
+<li><a target="_blank" rel="noopener" href="https://console.aws.amazon.com/support/home#/">Request higher request quota - AWS Support Center</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigateway-usageplan-throttlesettings.html">CloudFormation ThrottleSettings</a></li>
+<li><a target="_blank" rel="noopener" href="https://beabetterdev.com/2021/10/01/aws-api-gateway-request-throttling/">AWS API Gateway Throttling – Setup and Walkthrough</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jaxsbr.github.io/2022/07/08/api-gateway-throttling/" data-id="clbcxh3h6000120rv2qvggzu8" data-title="Amazon API Gateway - Throttling" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/AWS/" rel="tag">AWS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Amazon-API-Gateway/" rel="tag">Amazon API Gateway</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Rate-limiting/" rel="tag">Rate limiting</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Throttling/" rel="tag">Throttling</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-s3-signed-urls" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/pkb-blog/2022/07/01/s3-signed-urls/" class="article-date">
+  <time class="dt-published" datetime="2022-06-30T18:49:39.000Z" itemprop="datePublished">2022-07-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/pkb-blog/2022/07/01/s3-signed-urls/">Sharing S3 files securely with Signed Urls</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><p>I built a single page application (SPA) that allows users to get download access to a game I’m developing in my spare time. After downloading and playing the game, users can also can fill in a survey to provide any feedback or suggestions.<br>This post details how I’m securing the download link so that only authorized users have access.</p>
+<h3 id="Component-flow"><a href="#Component-flow" class="headerlink" title="Component flow"></a>Component flow</h3><ol>
+<li>The app can be logged into via AWS Cognito. This authorizes the user session and allows secure calls to Amazon APIGateway.</li>
+<li>A RESTfull Amazon API Gateway is used to invoke AWS Lambda functions that retrieve and store any data needed by the app.  </li>
+<li>Survey and other data is stored in and Amazon DynamoDb table.</li>
+<li>Game download files are stored in an Amazon S3 bucket.</li>
+</ol>
+<h3 id="S3-Signed-Urls"><a href="#S3-Signed-Urls" class="headerlink" title="S3 Signed Urls"></a>S3 Signed Urls</h3><p>The solution is to secure the download by generating a signed url based on the users current auth session. Once they log out, their session expires and the the Url no longer works. From the different methods of generating signed urls, using a <strong>SDK</strong> fits my use case the best as it allows the ability to programatically create a Url when the app loads information.<br><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/ShareObjectPreSignedURL.html">Generating a presigned URL to share an object</a></p>
+<blockquote>
+<p>By default, all S3 objects are private. Only the object owner has permission to access them. However, the object owner can optionally share objects with others by creating a presigned URL, using their own security credentials, to grant time-limited permission to download the objects.  </p>
+</blockquote>
+<h2 id="But-how"><a href="#But-how" class="headerlink" title="But how?"></a>But how?</h2><p>I decided to create a new Lambda function that can access my S3 bucket and generate a signed Url. The AWS how-to guide lists four SDK options:</p>
+<ul>
+<li>Java</li>
+<li>.NET</li>
+<li>PHP</li>
+<li>Python</li>
+</ul>
+<h3 id="Python-Lambda"><a href="#Python-Lambda" class="headerlink" title="Python Lambda"></a>Python Lambda</h3><p>I’ve never done any Python before, but the sample looked the most straight forward and thus I opted to use it.<br>Here’s what I ended up with:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> boto3</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">lambda_handler</span>(<span class="params">event, context</span>):</span><br><span class="line">    </span><br><span class="line">    url = boto3.client(<span class="string">&#x27;s3&#x27;</span>).generate_presigned_url(</span><br><span class="line">    ClientMethod=<span class="string">&#x27;get_object&#x27;</span>, </span><br><span class="line">    Params=&#123;<span class="string">&#x27;Bucket&#x27;</span>: <span class="string">&#x27;my-bucket-name&#x27;</span>, <span class="string">&#x27;Key&#x27;</span>: <span class="string">&#x27;game-dist-build-version&#x27;</span>&#125;,</span><br><span class="line">    ExpiresIn=<span class="number">86400</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">&#x27;statusCode&#x27;</span>: <span class="number">200</span>,</span><br><span class="line">        <span class="string">&#x27;body&#x27;</span>: url,</span><br><span class="line">        <span class="string">&#x27;headers&#x27;</span>: &#123;</span><br><span class="line">            <span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>: <span class="string">&#x27;*&#x27;</span>,</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Boto3"><a href="#Boto3" class="headerlink" title="Boto3"></a>Boto3</h4><p>What is it? It’s a Python SDK used to access AWS services.<br><a target="_blank" rel="noopener" href="https://boto3.amazonaws.com/v1/documentation/api/latest/index.html">Boto3 documentation</a></p>
+<blockquote>
+<p>You use the AWS SDK for Python (Boto3) to create, configure, and manage AWS services, such as Amazon Elastic Compute Cloud (Amazon EC2) and Amazon Simple Storage Service (Amazon S3). The SDK provides an object-oriented API as well as low-level access to AWS services</p>
+</blockquote>
+<p><code>boto3.client(&#39;s3&#39;).generate_presigned_url</code><br>Here we request the S3 ‘module’ and execute the <code>generate_presigned_url</code> functionality.</p>
+<h4 id="Parameters"><a href="#Parameters" class="headerlink" title="Parameters"></a>Parameters</h4><ul>
+<li><strong>Bucket</strong>: The name of the S3 bucket that contains the build artifacts for my game.</li>
+<li><strong>Key</strong>: The specific version of the game I’m granting access to.</li>
+<li><strong>ExpiresIn</strong>: How long the Url remains valid for. 86400 seconds translates to one day.</li>
+</ul>
+<h3 id="Other-steps"><a href="#Other-steps" class="headerlink" title="Other steps"></a>Other steps</h3><ul>
+<li>Create a new GET endpoint in the API Gateway. e.g. <a target="_blank" rel="noopener" href="https://your-api-host/your-environemnt/artifacts/artifact-version">https://your-api-host/your-environemnt/artifacts/artifact-version</a></li>
+<li>Connect the new endpoint to the Python Lambda.</li>
+<li>Configure the Python Lambda’s execution role to have read access to the S3 bucket.</li>
+<li>Consume the new GET endpoint in the SPA.</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jaxsbr.github.io/2022/07/01/s3-signed-urls/" data-id="clbcxh3hj001420rv4r2ua66s" data-title="Sharing S3 files securely with Signed Urls" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/API-Gateway/" rel="tag">API Gateway</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/AWS/" rel="tag">AWS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/AWS-Lambda/" rel="tag">AWS Lambda</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Boto3/" rel="tag">Boto3</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Cognito/" rel="tag">Cognito</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/DynamoDB/" rel="tag">DynamoDB</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Python/" rel="tag">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/S3/" rel="tag">S3</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Signed-Url/" rel="tag">Signed Url</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-aws-amplify-auth-cognito" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/pkb-blog/2022/06/10/aws-amplify-auth-cognito/" class="article-date">
+  <time class="dt-published" datetime="2022-06-10T03:10:21.000Z" itemprop="datePublished">2022-06-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/pkb-blog/2022/06/10/aws-amplify-auth-cognito/">AWS Amplify authentication with Cognito</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>AWS Amplify takes away a lot of the heavy lifting around hosting and deploying single page applications (SPA). But an application is useless if we can’t control user access to it.</p>
+<h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This post details the actions needed to:</p>
+<ul>
+<li>Create an Amplify project</li>
+<li>Add Cognito authentication to Amplify</li>
+<li>Add Users and User Groups to Cognito</li>
+</ul>
+<p>Assumptions</p>
+<ul>
+<li>You have a React app (I used create-react-app)</li>
+<li>You have this app in a compatible Amplify version control (I used CodeCommit)</li>
+</ul>
+<h2 id="Create-an-Amplify-project"><a href="#Create-an-Amplify-project" class="headerlink" title="Create an Amplify project"></a>Create an Amplify project</h2><p>Start in the AWS Amplify Console and select the <strong>Build app option</strong></p>
+<p>Select the Hosting environments tab</p>
+<ul>
+<li>Select a code repository the contain your UI code<ul>
+<li>Connect a branch (select repo and branch)</li>
+</ul>
+</li>
+<li>Configure build settings<ul>
+<li>Create environment (e.g. staging&#x2F;prod)</li>
+<li>Enable CICD (deploy on each front or backend commit)</li>
+</ul>
+</li>
+<li>Specify a service role (Allows Amplify to access your other AWS resources)<ul>
+<li>Create a Service Role <ul>
+<li>Select Amplify service</li>
+<li>Select AdministratorAccess-Amplify</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>After this you can review build settings in a generated yaml file</li>
+<li>Save and deploy the app</li>
+<li>You can now click on the <strong>Domain</strong> URL to view your live app.</li>
+</ul>
+<h2 id="Authentication"><a href="#Authentication" class="headerlink" title="Authentication"></a>Authentication</h2><h3 id="Configure-Amplify-App"><a href="#Configure-Amplify-App" class="headerlink" title="Configure Amplify App"></a>Configure Amplify App</h3><p>Select the Backend environments tab</p>
+<ul>
+<li>Initialy you have to click “Get Started” to enable the Backend tab. This takes a few minutes</li>
+<li>Click Launch Studio</li>
+<li>Go to the Set up &gt; Authentication tab<ul>
+<li>Add a login mechanism. (this is where you can specify federate login types. e.g. Google or Facebook). I chose a simple Email mechanism.</li>
+<li>Specify Sign-in &amp; sign-out URL’s. <ul>
+<li>This allows for multiple URLs. I specified both my local and production URL’s to allow login requirements for both environments.</li>
+</ul>
+</li>
+<li>You and also setup MFA and password rulese here. I opted for all the defaults, no MFA.</li>
+<li>Deploy</li>
+</ul>
+</li>
+<li>Save the new authentication setup. This will start a CloudFormation deployment.</li>
+<li>You can view the created authentication resouces in Cognito or CloudFormation.</li>
+</ul>
+<h3 id="Add-users-and-groups"><a href="#Add-users-and-groups" class="headerlink" title="Add users and groups"></a>Add users and groups</h3><p>While still in the Amplify Studio</p>
+<ul>
+<li>Select the Manage &gt; User management tab</li>
+<li>In the Users tab click Create User<ul>
+<li>Specify email and temporary password</li>
+</ul>
+</li>
+<li>In the Groups tab click Create Group<ul>
+<li>Specify a group name</li>
+<li>Select the new group and click Add User</li>
+<li>Specify the users to add</li>
+</ul>
+</li>
+</ul>
+<h3 id="Configure-SPA-App"><a href="#Configure-SPA-App" class="headerlink" title="Configure SPA App"></a>Configure SPA App</h3><p>Install the amplify CLI <a target="_blank" rel="noopener" href="https://docs.amplify.aws/cli/start/install/">from here</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g @aws-amplify/cli</span><br></pre></td></tr></table></figure>
+<ul>
+<li>From the Amplify application, Backend environments tab, find and expand the “Local setup instructions” toggle drop down.</li>
+<li>Copy and run the <code>amplify pull --appId &#123;your app id&#125; --envName &#123;your env&#125;</code> command in your UI project.</li>
+</ul>
+<p>This will sync the Cognito infrastructure and client credentials with your project. NOTE, the credentials are not commited to your source control. see “aws-exports.js” file</p>
+<p>Install the aws amplify npm dependencies</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install aws-amplify</span><br></pre></td></tr></table></figure>
+
+<p>Add a UI mechanism for sign-up, sign-in and sign-out.<br>Two options for doing this are:</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://docs.amplify.aws/lib/auth/getting-started/q/platform/js/#option-1-use-pre-built-ui-components">Pre-built UI components</a> (Opting for this one)</li>
+<li><a target="_blank" rel="noopener" href="https://docs.amplify.aws/lib/auth/emailpassword/q/platform/js/">API calls</a></li>
+</ol>
+<p>Install components for React</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install aws-amplify @aws-amplify/ui-react</span><br></pre></td></tr></table></figure>
+
+<p>Example of my App.js file</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Amplify</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;aws-amplify&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; withAuthenticator &#125; <span class="keyword">from</span> <span class="string">&#x27;@aws-amplify/ui-react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;@aws-amplify/ui-react/styles.css&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> awsExports <span class="keyword">from</span> <span class="string">&#x27;./aws-exports&#x27;</span>;</span><br><span class="line"><span class="title class_">Amplify</span>.<span class="title function_">configure</span>(awsExports);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params">&#123;signOut, user&#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello &#123;user.username&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;signOut&#125;</span>&gt;</span>Sign out<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">withAuthenticator</span>(<span class="title class_">App</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="Disable-self-service-sign-up"><a href="#Disable-self-service-sign-up" class="headerlink" title="Disable self-service sign-up"></a>Disable self-service sign-up</h3><p>By default users can register as user by following a Sign-up and email verification flow. For my purposes however I want a very specific list of users to have access to the app, thus I’d want to prevent the default sign-up action being possible.</p>
+<p>Go to AWS Cognito in the console</p>
+<ul>
+<li>Select the user pool</li>
+<li>Under the Sign-up experience tab select Edit self-service sign-up<ul>
+<li>Uncheck Enable self-registration</li>
+<li>Save changes</li>
+</ul>
+</li>
+</ul>
+<p>NOTE: this does not hide the “Create Account” option, merely prevents successful sign-ups. Ideal would be to hide as well.</p>
+<h2 id="Resources"><a href="#Resources" class="headerlink" title="Resources"></a>Resources</h2><p><a target="_blank" rel="noopener" href="https://docs.amplify.aws/console/">https://docs.amplify.aws/console/</a><br><a target="_blank" rel="noopener" href="https://docs.amplify.aws/console/auth/authentication/">https://docs.amplify.aws/console/auth/authentication/</a><br><a target="_blank" rel="noopener" href="https://docs.amplify.aws/console/authz/authorization/">https://docs.amplify.aws/console/authz/authorization/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jaxsbr.github.io/2022/06/10/aws-amplify-auth-cognito/" data-id="clbcxh3h2000020rv3838e66h" data-title="AWS Amplify authentication with Cognito" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/AWS/" rel="tag">AWS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Amplify/" rel="tag">Amplify</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Cognito/" rel="tag">Cognito</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/React/" rel="tag">React</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/SPA/" rel="tag">SPA</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-node-version-toggle" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/pkb-blog/2022/06/10/node-version-toggle/" class="article-date">
+  <time class="dt-published" datetime="2022-06-09T23:55:36.000Z" itemprop="datePublished">2022-06-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/pkb-blog/2022/06/10/node-version-toggle/">Toggle nodejs versions</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>There has been a number times when I tried new frameworks or templates that depend on specific version of nodejs. When this happens I’m faced with skipping on the idea or messing around with my install version of nodejs, and inavertantly causing issue for some of my other projects.</p>
+<h2 id="A-simple-solution"><a href="#A-simple-solution" class="headerlink" title="A simple solution"></a>A simple solution</h2><p><a target="_blank" rel="noopener" href="https://github.com/nvm-sh/nvm">nvm</a> - Node Version Manager</p>
+<p>Allows easy installations and toggling of nodejs versions</p>
+<h2 id="Linux-Install-nvm"><a href="#Linux-Install-nvm" class="headerlink" title="Linux Install nvm"></a>Linux Install nvm</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash</span><br></pre></td></tr></table></figure>
+
+<h2 id="Windows-Install-nvm"><a href="#Windows-Install-nvm" class="headerlink" title="Windows Install nvm"></a>Windows Install nvm</h2><p>Find the <a target="_blank" rel="noopener" href="https://github.com/coreybutler/nvm-windows/releases">latest release</a> from the NVM Github page<br>Download the <code>nvm-setup.exe</code> and run it on you local computer. </p>
+<h2 id="Install-nodejs-version"><a href="#Install-nodejs-version" class="headerlink" title="Install nodejs version"></a>Install nodejs version</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nvm install 12</span><br><span class="line">nvm install 14</span><br></pre></td></tr></table></figure>
+
+<h2 id="Toggle-current-nodejs-version"><a href="#Toggle-current-nodejs-version" class="headerlink" title="Toggle current nodejs version"></a>Toggle current nodejs version</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm use 14</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jaxsbr.github.io/2022/06/10/node-version-toggle/" data-id="clbcxh3h8000320rvafsf8vae" data-title="Toggle nodejs versions" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/nodejs/" rel="tag">nodejs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/nvm/" rel="tag">nvm</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-neural-network-intro" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/pkb-blog/2022/05/27/neural-network-intro/" class="article-date">
+  <time class="dt-published" datetime="2022-05-26T23:32:11.000Z" itemprop="datePublished">2022-05-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/pkb-blog/2022/05/27/neural-network-intro/">Neural Networks For This Dummy</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>I’m really interested in AI and Machine learning. I’ve been curious about neural networks for quite some time, especially since they try to simulate how the human brain works</p>
+<h2 id="Goals"><a href="#Goals" class="headerlink" title="Goals"></a>Goals</h2><ul>
+<li>Understand the how Neurons and Synapses work together</li>
+<li>Understand how a network can makes accurate predictions</li>
+<li>Build a prediction system that acts on custom attributes</li>
+</ul>
+<h2 id="Idea-Bug-Bash-🐛"><a href="#Idea-Bug-Bash-🐛" class="headerlink" title="Idea - Bug Bash 🐛"></a>Idea - Bug Bash 🐛</h2><h3 id="What-shall-we-predict"><a href="#What-shall-we-predict" class="headerlink" title="What shall we predict?"></a>What shall we predict?</h3><p>Given two insects, each with different attributes, which is most likely to win in a fight?</p>
+<h3 id="How-will-this-work"><a href="#How-will-this-work" class="headerlink" title="How will this work?"></a>How will this work?</h3><p>Attributes will have weight values that when summed creates a score.<br>The higher the score, the more likely to win.<br>The neural network will Not know about this score however, rather, only which attributes the insect has.<br>Given training data containing the attributes of both insects and a value to indicate the selected victor, the network should be able to identify a pattern and start accurately predicting results.</p>
+<h3 id="Attributes"><a href="#Attributes" class="headerlink" title="Attributes"></a>Attributes</h3><ul>
+<li>Strength</li>
+<li>Speed</li>
+<li>Toughness</li>
+<li>Rested</li>
+</ul>
+<h3 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h3><p>1 &#x3D; yes the insect has this attribute<br>0 &#x3D; no the insect does not have this attribute<br><strong>[strength, speed, toughness, rested]</strong></p>
+<p>InsectA &#x3D; A<br>[1, 0, 1, 0] &#x3D; strong, slow, tough and tired</p>
+<p>InsectB &#x3D; B<br>[0, 1, 0, 1] &#x3D; weak, fast, fragile and rested</p>
+<h3 id="How-will-we-feed-the-network-this-info"><a href="#How-will-we-feed-the-network-this-info" class="headerlink" title="How will we feed the network this info?"></a>How will we feed the network this info?</h3><p>Note: below is an exaple of the input structure, not total input.<br>We will need to give the network more than one example in order to train correctly</p>
+<p><strong>Training Input</strong><br>InsectA [1, 0, 1, 0] + InsectB [0, 1, 0, 1]<br>Input &#x3D; [1, 0, 1, 0, 0, 1, 0, 1]</p>
+<p><strong>Training Expected Output</strong><br>0 &#x3D; InsectA wins<br>1 &#x3D; InsectB wins</p>
+<h3 id="Test-if-it-works"><a href="#Test-if-it-works" class="headerlink" title="Test if it works"></a>Test if it works</h3><p>Create a new insects with attributes combinations the network has not seen yet.<br>Run the networks predic opperation with this input and determine if it predicts the victor correctly.</p>
+<h3 id="Code-sample"><a href="#Code-sample" class="headerlink" title="Code sample"></a>Code sample</h3><p><a target="_blank" rel="noopener" href="https://github.com/Jaxsbr/DNN-Demo">DNN-Demo</a></p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>The sample code accurately predicts which insect will win.<br>The output is usually a decimal e.g. 0.7 and thus you have to round up or down to get a 0 or 1<br>e.g. 0.7 &#x3D; 1,  0.3 &#x3D; 0</p>
+<p>Eventhough the prediction works as expected, I realized that the training data is what matters most for accuracy.<br>If you manipulate it we can make it predict the opposite to where the Insect with the least attributes win.<br>Additionally, the sample does not show the benefit of a small scale network over normal conditional programming. I could simply sum all the attributes and select the highest values as the victor. To get more value from the neural network I suspect the prediction needs to. </p>
+<ul>
+<li>Be more complex, something other than summing attribute values</li>
+<li>Requires real dynamic training data and frequent retraining of the network.</li>
+</ul>
+<p>I do however feel more comfortable about the topic and thus satisfied with this effort.</p>
+<h2 id="How-it-works"><a href="#How-it-works" class="headerlink" title="How it works"></a>How it works</h2><h3 id="Network"><a href="#Network" class="headerlink" title="Network"></a>Network</h3><p>A neural network simulated in code, consists of input, hidden and output layers.<br>Input layers receive the initial values you provide the systems.<br>Hidden layers pass values from input to output layers or to other hidden layers.<br>Output layers receive the results of the networks caluclation and outputs.</p>
+<p>A layers is collection of neurons that contain a value.<br>Neurons connect to other neurons in other layers via a synapses.<br>A sysnapses contains a weight value.<br>As the neuron passes it’s value through the synapses the value is modified (value * weight).<br>Neurons receiving modified values, will pass this value throught an activation function.<br>Depending on the value returned from the activation function, we can either block or pass the a next neuron call.</p>
+<img src="/pkb-blog/images/NN.png"/>
+
+<h3 id="Formula"><a href="#Formula" class="headerlink" title="Formula"></a>Formula</h3><p>x &#x3D; input (neuron)<br>w &#x3D; weight (synapse)<br>b &#x3D; bias<br>wtx &#x3D; (x1 * w1) + (x2 * w2) (total input)<br>z &#x3D; wtx + b<br>a &#x3D; σ(z) (sigmoid activation)</p>
+<h3 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h3><ul>
+<li>We need to know what the desired output is give a particular set of inputs</li>
+<li>Randomise starting weights</li>
+<li>Compare the actual output with the desired output</li>
+<li>Make small weight adjustments to compensate for the incorrect output</li>
+<li>Rince and repeat untill the neural network is trained.</li>
+<li>The network should now have the appropriate weights to predict acuratly when provided with similar input as the training data.</li>
+</ul>
+<p>NOTE: the training “experience” lives in the weights of the synapses. This is what we would store to create pre trained networks.</p>
+<h3 id="Weighted-Derivative-Formula"><a href="#Weighted-Derivative-Formula" class="headerlink" title="Weighted Derivative Formula"></a>Weighted Derivative Formula</h3><p>But how much should we adjust the weights by when the output is incorrect?</p>
+<p>adjust weights by &#x3D; error.input.output.(1 - output) <em>add this to all synapses</em><br>error &#x3D; desired result - actual result<br>input &#x3D; what we pass into the input layer nodes<br>sigmoid gradient curve &#x3D; output.(1 - output)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jaxsbr.github.io/2022/05/27/neural-network-intro/" data-id="clbcxh3hj001520rvbws2ex2a" data-title="Neural Networks For This Dummy" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/AI/" rel="tag">AI</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Artificial-Intelligence/" rel="tag">Artificial Intelligence</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/C/" rel="tag">C#</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/ML/" rel="tag">ML</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Machine-Learning/" rel="tag">Machine Learning</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Neural-Networks/" rel="tag">Neural Networks</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-host-a-static-website-with-aws-s3" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/pkb-blog/2022/05/19/host-a-static-website-with-aws-s3/" class="article-date">
+  <time class="dt-published" datetime="2022-05-18T18:16:57.000Z" itemprop="datePublished">2022-05-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/pkb-blog/2022/05/19/host-a-static-website-with-aws-s3/">How to host a static website with AWS S3</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>I recently hosted a static website on AWS S3. This is pretty straight forward if you already have an AWS account and user&#x2F;role configured with Adminstrator priviledges. You basically create a S3 bucket, make is public and upload your website content directly from the AWS console. </p>
+<p>I had to tweak a couple of things on my journey and ended up re-doing some of the setup. Because of this I decided to see how to automate the infrastructure and also the content deployment process for when my static site needed updating.</p>
+<h1 id="TLDR"><a href="#TLDR" class="headerlink" title="TLDR"></a>TLDR</h1><p>If you care less about the how and just want a quick template, go here:<br><a target="_blank" rel="noopener" href="https://github.com/Jaxsbr/aws-s3-website-template">aws-s3-website-template</a></p>
+<h1 id="Plan-of-Action"><a href="#Plan-of-Action" class="headerlink" title="Plan of Action"></a>Plan of Action</h1><p>Here are the things we need to do:</p>
+<ul>
+<li>Install the AWS CLI and configure your AWS credentials. (your local PC)</li>
+<li>Create an infrastructure file that defines a publicly accessible S3 bucket.</li>
+<li>Create an infrastructure deployment script.</li>
+<li>Create a content deployment script</li>
+</ul>
+<h2 id="AWS-CLI-and-config"><a href="#AWS-CLI-and-config" class="headerlink" title="AWS CLI and config"></a>AWS CLI and config</h2><p>You can install the AWS CLI from <a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html">here</a>.<br>Ensure you have your AWS config and credentials setup like this.</p>
+<p><strong>.aws&#x2F;config</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[profile your-aws-profile]</span><br><span class="line">region = us-east-1</span><br><span class="line">output = json</span><br></pre></td></tr></table></figure>
+
+<p><strong>.aws&#x2F;credentials</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[your-aws-profile]</span><br><span class="line">aws_access_key_id = &#123;your access key id&#125;</span><br><span class="line">aws_secret_access_key = &#123;your access key&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Infrastructure-File"><a href="#Infrastructure-File" class="headerlink" title="Infrastructure File"></a>Infrastructure File</h2><p><strong>app.yml</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">AWSTemplateFormatVersion:</span> <span class="number">2010-09-09</span></span><br><span class="line"></span><br><span class="line"><span class="attr">Parameters:</span></span><br><span class="line">  <span class="attr">BucketName:</span></span><br><span class="line">    <span class="attr">Type:</span> <span class="string">String</span></span><br><span class="line">    <span class="attr">Description:</span> <span class="string">Bucket</span> <span class="string">Name</span></span><br><span class="line">    <span class="attr">Default:</span> <span class="string">MyS3BucketWebsite</span></span><br><span class="line"></span><br><span class="line"><span class="attr">Resources:</span></span><br><span class="line">  <span class="attr">MyS3Bucket:</span></span><br><span class="line">    <span class="attr">Type:</span> <span class="string">AWS::S3::Bucket</span></span><br><span class="line">    <span class="attr">Description:</span> <span class="string">Bestest</span> <span class="string">bucket</span> <span class="string">eva</span></span><br><span class="line">    <span class="attr">Properties:</span> </span><br><span class="line">      <span class="attr">AccessControl:</span> <span class="string">PublicRead</span></span><br><span class="line">      <span class="attr">BucketName:</span> <span class="type">!Ref</span> <span class="string">BucketName</span></span><br><span class="line">      <span class="attr">WebsiteConfiguration:</span></span><br><span class="line">        <span class="attr">IndexDocument:</span> <span class="string">index.html</span></span><br><span class="line">        <span class="attr">ErrorDocument:</span> <span class="string">error.html</span></span><br><span class="line">  </span><br><span class="line">  <span class="attr">MyS3BucketPolicy:</span></span><br><span class="line">    <span class="attr">Type:</span> <span class="string">AWS::S3::BucketPolicy</span></span><br><span class="line">    <span class="attr">Properties:</span></span><br><span class="line">      <span class="attr">Bucket:</span> <span class="type">!Ref</span> <span class="string">MyS3Bucket</span></span><br><span class="line">      <span class="attr">PolicyDocument:</span></span><br><span class="line">        <span class="attr">Statement:</span></span><br><span class="line">          <span class="bullet">-</span></span><br><span class="line">            <span class="attr">Action:</span></span><br><span class="line">              <span class="bullet">-</span> <span class="string">s3:GetObject</span></span><br><span class="line">            <span class="attr">Effect:</span> <span class="string">Allow</span></span><br><span class="line">            <span class="attr">Resource:</span></span><br><span class="line">              <span class="bullet">-</span> <span class="type">!Sub</span> <span class="string">arn:aws:s3:::$&#123;MyS3Bucket&#125;</span>              </span><br><span class="line">            <span class="attr">Principal:</span></span><br><span class="line">              <span class="attr">AWS:</span></span><br><span class="line">                <span class="bullet">-</span> <span class="string">&#x27;*&#x27;</span></span><br></pre></td></tr></table></figure>
+<p><strong>NOTE: You are have to upload an <code>index.html</code> and <code>error.html</code> file in order for the site work properly.</strong></p>
+<h2 id="Infrastructure-Deployment-Script"><a href="#Infrastructure-Deployment-Script" class="headerlink" title="Infrastructure Deployment Script"></a>Infrastructure Deployment Script</h2><p>We will use CloudFormation to create the S3 bucket by executing a bash script. Typically you only do this once and can opt to just create your bucket in the AWS console instead. I like doing this scripting route for the following reasons:</p>
+<ul>
+<li>It gives me an easy way to re create my bucket if something ever goes wrong. e.g. hackers or me</li>
+<li>Serves as a template for new projects. Easy to copy, paste and modify.</li>
+</ul>
+<p>I created a <code>deployInfra.sh</code> script that allows me to conditionally <strong>create</strong> or <strong>update</strong> the bucket.<br>The CloudFormation CLI command looks like this:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">aws cloudformation &quot;$1&quot; \</span><br><span class="line">--stack-name MyS3BucketWebsiteStack \</span><br><span class="line">--template-body file://./app.yaml \</span><br><span class="line">--profile your-aws-profile \</span><br><span class="line">--region us-east-1</span><br></pre></td></tr></table></figure>
+<p>The <code>$1</code> is an agument that is passed and can be either <code>create-stack</code> or <code>update-stack</code>.</p>
+<details>    
+    <summary style="font-size:16px">
+        See full script
+    </summary>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">_defaultColor=$(tput sgr0)</span><br><span class="line">_infoColor=$(tput setaf 3)</span><br><span class="line">_updateCommand=<span class="string">&quot;update-stack&quot;</span></span><br><span class="line">_createCommand=<span class="string">&quot;create-stack&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> printInfo &#123;</span><br><span class="line">    <span class="built_in">printf</span> <span class="string">&quot;<span class="variable">$&#123;_infoColor&#125;</span>$1<span class="variable">$&#123;_defaultColor&#125;</span>&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> printInfoLine &#123;</span><br><span class="line">    printInfo <span class="string">&quot;<span class="variable">$1</span> \n&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> executeStackCommand &#123;</span><br><span class="line">    printInfoLine <span class="string">&quot;Stack Command &#x27;<span class="variable">$1</span>&#x27; Starting...&quot;</span></span><br><span class="line">    aws cloudformation <span class="string">&quot;<span class="variable">$1</span>&quot;</span> \</span><br><span class="line">    --stack-name MyS3BucketWebsiteStack \</span><br><span class="line">    --template-body file://./app.yaml \</span><br><span class="line">    --profile your-aws-profile \</span><br><span class="line">    --region us-east-1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">printInfoLine <span class="string">&quot;UI Deploy Script Starting...&quot;</span></span><br><span class="line"></span><br><span class="line">printInfoLine <span class="string">&quot;Specify if you want to update or create this stack (update/create)&quot;</span></span><br><span class="line"><span class="built_in">read</span> stackCommand</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$stackCommand</span>&quot;</span> == <span class="string">&#x27;create&#x27;</span> ]; <span class="keyword">then</span></span><br><span class="line">    executeStackCommand <span class="variable">$_createCommand</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$stackCommand</span>&quot;</span> == <span class="string">&quot;update&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    executeStackCommand <span class="variable">$_updateCommand</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$stackCommand</span>&quot;</span> != <span class="string">&quot;update&quot;</span> ] &amp;&amp; [ <span class="string">&quot;<span class="variable">$stackCommand</span>&quot;</span> != <span class="string">&quot;create&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    printInfoLine <span class="string">&quot;Nothing selected, Goodbey!&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+</details>
+
+<h2 id="Content-Deployment"><a href="#Content-Deployment" class="headerlink" title="Content Deployment"></a>Content Deployment</h2><p>S3 CLI comes with a really nifty command, <code>sync</code>. This does all the heavy lifting for you by synchronizing a source content with your S3 bucket.</p>
+<ul>
+<li>Configure the website content as the source (on your pc)</li>
+<li>Configure the S3 bucket to sync to.</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">aws s3 sync &#x27;/website-source-directory&#x27; &#x27;s3://MyS3BucketWebsite&#x27; \</span><br><span class="line">--acl public-read \</span><br><span class="line">--profile your-aws-profile \</span><br><span class="line">--region us-east-1</span><br></pre></td></tr></table></figure>
+
+<p>I created a <code>deployContent.sh</code> script that executes the <code>sync</code> action.</p>
+<details>
+    <summary style="font-size:16px">
+        See full script
+    </summary>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">_defaultColor=$(tput sgr0)</span><br><span class="line">_infoColor=$(tput setaf 3)</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> printInfo &#123;</span><br><span class="line">    <span class="built_in">printf</span> <span class="string">&quot;<span class="variable">$&#123;_infoColor&#125;</span>$1<span class="variable">$&#123;_defaultColor&#125;</span>&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> printInfoLine &#123;</span><br><span class="line">    printInfo <span class="string">&quot;<span class="variable">$1</span> \n&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">printInfoLine <span class="string">&quot;Sync S3 buck starting...&quot;</span></span><br><span class="line"></span><br><span class="line">aws s3 <span class="built_in">sync</span> <span class="string">&#x27;/website-source-directory&#x27;</span> <span class="string">&#x27;s3://MyS3BucketWebsite&#x27;</span> \</span><br><span class="line">--acl public-read \</span><br><span class="line">--profile your-aws-profile \</span><br><span class="line">--region us-east-1</span><br><span class="line"></span><br><span class="line">printInfoLine <span class="string">&quot;Sync S3 buck completed...&quot;</span></span><br></pre></td></tr></table></figure>
+</details>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jaxsbr.github.io/2022/05/19/host-a-static-website-with-aws-s3/" data-id="clbcxh3ha000520rv7131hzev" data-title="How to host a static website with AWS S3" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/AWS/" rel="tag">AWS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Bash/" rel="tag">Bash</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/CloudFormation/" rel="tag">CloudFormation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/S3/" rel="tag">S3</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Script/" rel="tag">Script</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Static-Website-Hosting/" rel="tag">Static Website Hosting</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-hexo-basics" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/pkb-blog/2022/05/04/hexo-basics/" class="article-date">
+  <time class="dt-published" datetime="2022-05-03T21:00:00.000Z" itemprop="datePublished">2022-05-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/pkb-blog/2022/05/04/hexo-basics/">Hexo Basics</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>This blog was setup using Hexo. The following sections detail some of my learnings.</p>
+<h3 id="So-what-is-Hexo"><a href="#So-what-is-Hexo" class="headerlink" title="So what is Hexo?"></a>So what is Hexo?</h3><p>Hexo is a static website site generator. You create blog entries using markdown language which Hexo will convert to website content (HTML, CSS) ready to be hosted.</p>
+<p>I followed a <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=Kt7u5kr_P5o&list=PLLAZ4kZ9dFpOMJR6D25ishrSedvsguVSm">tutorial series by Mike Dane</a> to get me up and running and also utilized the <a target="_blank" rel="noopener" href="https://hexo.io/docs/">official Hexo documentation</a>.</p>
+<h2 id="Instalation"><a href="#Instalation" class="headerlink" title="Instalation"></a>Instalation</h2><hr>
+<p>Add the hexo-cli tool globaly  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+
+<p>You can install the package instead, making the hexo commands only available within a project VS globaly anywhere.  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Getting-Started"><a href="#Getting-Started" class="headerlink" title="Getting Started"></a>Getting Started</h2><hr>
+<p>Creating the intial site.  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo init &#123;name of your site&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Running the site.  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo server</span><br></pre></td></tr></table></figure>
+
+<h2 id="Scaffolds"><a href="#Scaffolds" class="headerlink" title="Scaffolds"></a>Scaffolds</h2><hr>
+<p>Scaffolds folder contains template markdown files.<br>These files acts as the starting file when creating new post, drafts or pages.  </p>
+<p>You can create custom scaffolds by adding new <strong>.md</strong> files in the <strong>_scaffolds</strong> folder.</p>
+<h2 id="Source"><a href="#Source" class="headerlink" title="Source"></a>Source</h2><hr>
+<p>Source folder contains all your blog content content.<br><em><strong>e.g hexo-basics.md</strong></em></p>
+<h2 id="Themes"><a href="#Themes" class="headerlink" title="Themes"></a>Themes</h2><hr>
+<p><a target="_blank" rel="noopener" href="https://hexo.io/themes/">Official Hexo themes</a><br><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=A-muxF_6plc&list=PLLAZ4kZ9dFpOMJR6D25ishrSedvsguVSm&index=10">How to install a theme</a></p>
+<ul>
+<li>Themes folder contains a collection of styling content for the website.  </li>
+<li>The default theme include with Hexo is <strong>Landscape</strong>.  </li>
+<li>Themes can be customized or created from scratch.  </li>
+<li>Theme configs: <strong>&#x2F;_config.landscape.yml</strong></li>
+</ul>
+<h2 id="config-yml"><a href="#config-yml" class="headerlink" title="config.yml"></a>config.yml</h2><hr>
+<p>Configures various aspects of the site.<br><strong>e.g.</strong> <code>theme: landscape</code></p>
+<p>Set a url config to your actuall hosting site</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url: https://yourhostingsite</span><br></pre></td></tr></table></figure>
+
+<p>I have a github.io space where my personal wesite lives. I want my blog to live as a sub page, with the content served from a different repository than the main site. To configure this I did the following:<br>set the <code>url:</code> to <a href="https://jaxsbr.github.io/">https://jaxsbr.github.io/</a><br>set the <code>root:</code> to &#x2F;pkb-blog</p>
+<h2 id="Posts-Drafts-amp-Pages"><a href="#Posts-Drafts-amp-Pages" class="headerlink" title="Posts, Drafts &amp; Pages"></a>Posts, Drafts &amp; Pages</h2><hr>
+<h3 id="Post"><a href="#Post" class="headerlink" title="Post"></a>Post</h3><p>Create a new post in the source&#x2F;_posts directory. This automatically shows in your site.  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new &#123;post name&#125;</span><br></pre></td></tr></table></figure>
+
+<p>A URL is specified for new post inthis format:<br><strong><a target="_blank" rel="noopener" href="http://baseaddress/year/mo/dy/postname">http://baseAddress/year/mo/dy/postname</a></strong></p>
+<h3 id="Draft"><a href="#Draft" class="headerlink" title="Draft"></a>Draft</h3><p>You can also create draft posts. These arent’ show by default when launch the Hexo server.  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new draft &#123;draft post name&#125;</span><br></pre></td></tr></table></figure>
+
+<p>To show drafts, run the server with this argument:  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo server --draft</span><br></pre></td></tr></table></figure>
+
+<p>Publish a draft (from _draft to _post):  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo publish &#123;draft post name&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Page"><a href="#Page" class="headerlink" title="Page"></a>Page</h3><p>Creating a new page with Hexo, results in a new folder in the code structure.<br><strong>&#x2F;source&#x2F;{your page name}</strong>  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new page &#123;your page name&#125;</span><br></pre></td></tr></table></figure>
+
+<p>You can access this directly, without a date format as seen with new posts above:<br><strong><a target="_blank" rel="noopener" href="http://baseaddress/MyPage">http://baseAddress/MyPage</a></strong></p>
+<h2 id="Generate-and-Deploy"><a href="#Generate-and-Deploy" class="headerlink" title="Generate and Deploy"></a>Generate and Deploy</h2><p>We run the generate command to convert the markdown and other content to publishable website content.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo generate</span><br><span class="line">hexo g</span><br></pre></td></tr></table></figure>
+
+<p>You can configure where the content is output to by setting the <code>public_dir:</code> property in <strong>_config.yml</strong> file.<br>e.g. Note, I use a sub path to simulate what my directory looks like when live</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public_dir: public/pkb-blog</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment">Deploy Documentation</a><br>Once we have website content, we can publish directly to Github.<br>First I had to update the <strong>_config.yml</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: &#x27;git&#x27;</span><br><span class="line">  repo: &#x27;https://github.com/Jaxsbr/pkb-blog.git&#x27;</span><br><span class="line">  branch: main</span><br></pre></td></tr></table></figure>
+
+<p>Secondly I had to install a package the aids in git commits.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+
+<p>To deploy we run</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo deploy</span><br></pre></td></tr></table></figure>
+
+<h2 id="Time-Saver"><a href="#Time-Saver" class="headerlink" title="Time Saver"></a>Time Saver</h2><p>Once all of the above is setup and you only need to create content, using the following step will optimize your workflow.</p>
+<ol>
+<li>Make you markdown change (actual blog content)</li>
+<li>Run <code>hexo server</code> and preview changes</li>
+<li>Run <code>hexo g -d</code> to both generate and deploy live</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jaxsbr.github.io/2022/05/04/hexo-basics/" data-id="clbcxh3h9000420rvfnofhbcb" data-title="Hexo Basics" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Hexo/" rel="tag">Hexo</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/API-Gateway/" rel="tag">API Gateway</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AWS/" rel="tag">AWS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AWS-Lambda/" rel="tag">AWS Lambda</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Amazon-API-Gateway/" rel="tag">Amazon API Gateway</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Amplify/" rel="tag">Amplify</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Artificial-Intelligence/" rel="tag">Artificial Intelligence</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Bash/" rel="tag">Bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Boto3/" rel="tag">Boto3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/C/" rel="tag">C#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/CloudFormation/" rel="tag">CloudFormation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Cognito/" rel="tag">Cognito</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/DynamoDB/" rel="tag">DynamoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/ML/" rel="tag">ML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Machine-Learning/" rel="tag">Machine Learning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Neural-Networks/" rel="tag">Neural Networks</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Rate-limiting/" rel="tag">Rate limiting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/React/" rel="tag">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/S3/" rel="tag">S3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/SPA/" rel="tag">SPA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Script/" rel="tag">Script</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Signed-Url/" rel="tag">Signed Url</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Static-Website-Hosting/" rel="tag">Static Website Hosting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Throttling/" rel="tag">Throttling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/nodejs/" rel="tag">nodejs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/nvm/" rel="tag">nvm</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/pkb-blog/tags/AI/" style="font-size: 10px;">AI</a> <a href="/pkb-blog/tags/API-Gateway/" style="font-size: 10px;">API Gateway</a> <a href="/pkb-blog/tags/AWS/" style="font-size: 20px;">AWS</a> <a href="/pkb-blog/tags/AWS-Lambda/" style="font-size: 10px;">AWS Lambda</a> <a href="/pkb-blog/tags/Amazon-API-Gateway/" style="font-size: 10px;">Amazon API Gateway</a> <a href="/pkb-blog/tags/Amplify/" style="font-size: 10px;">Amplify</a> <a href="/pkb-blog/tags/Artificial-Intelligence/" style="font-size: 10px;">Artificial Intelligence</a> <a href="/pkb-blog/tags/Bash/" style="font-size: 10px;">Bash</a> <a href="/pkb-blog/tags/Boto3/" style="font-size: 10px;">Boto3</a> <a href="/pkb-blog/tags/C/" style="font-size: 10px;">C#</a> <a href="/pkb-blog/tags/CloudFormation/" style="font-size: 10px;">CloudFormation</a> <a href="/pkb-blog/tags/Cognito/" style="font-size: 15px;">Cognito</a> <a href="/pkb-blog/tags/DynamoDB/" style="font-size: 10px;">DynamoDB</a> <a href="/pkb-blog/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/pkb-blog/tags/ML/" style="font-size: 10px;">ML</a> <a href="/pkb-blog/tags/Machine-Learning/" style="font-size: 10px;">Machine Learning</a> <a href="/pkb-blog/tags/Neural-Networks/" style="font-size: 10px;">Neural Networks</a> <a href="/pkb-blog/tags/Python/" style="font-size: 10px;">Python</a> <a href="/pkb-blog/tags/Rate-limiting/" style="font-size: 10px;">Rate limiting</a> <a href="/pkb-blog/tags/React/" style="font-size: 10px;">React</a> <a href="/pkb-blog/tags/S3/" style="font-size: 15px;">S3</a> <a href="/pkb-blog/tags/SPA/" style="font-size: 10px;">SPA</a> <a href="/pkb-blog/tags/Script/" style="font-size: 10px;">Script</a> <a href="/pkb-blog/tags/Signed-Url/" style="font-size: 10px;">Signed Url</a> <a href="/pkb-blog/tags/Static-Website-Hosting/" style="font-size: 10px;">Static Website Hosting</a> <a href="/pkb-blog/tags/Throttling/" style="font-size: 10px;">Throttling</a> <a href="/pkb-blog/tags/nodejs/" style="font-size: 10px;">nodejs</a> <a href="/pkb-blog/tags/nvm/" style="font-size: 10px;">nvm</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/06/">June 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/05/">May 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/pkb-blog/2022/07/08/api-gateway-throttling/">Amazon API Gateway - Throttling</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2022/07/01/s3-signed-urls/">Sharing S3 files securely with Signed Urls</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2022/06/10/aws-amplify-auth-cognito/">AWS Amplify authentication with Cognito</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2022/06/10/node-version-toggle/">Toggle nodejs versions</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2022/05/27/neural-network-intro/">Neural Networks For This Dummy</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 jacobus brink<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/pkb-blog/" class="mobile-nav-link">Home</a>
+  
+    <a href="/pkb-blog/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/pkb-blog/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/pkb-blog/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/pkb-blog/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

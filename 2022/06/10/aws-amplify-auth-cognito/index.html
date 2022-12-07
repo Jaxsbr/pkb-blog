@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>AWS Amplify authentication with Cognito | Personal Knowledgebase Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="AWS Amplify takes away a lot of the heavy lifting around hosting and deploying single page applications (SPA). But an application is useless if we can’t control user access to it. OverviewThis post de">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AWS Amplify authentication with Cognito">
+<meta property="og:url" content="https://jaxsbr.github.io/2022/06/10/aws-amplify-auth-cognito/index.html">
+<meta property="og:site_name" content="Personal Knowledgebase Blog">
+<meta property="og:description" content="AWS Amplify takes away a lot of the heavy lifting around hosting and deploying single page applications (SPA). But an application is useless if we can’t control user access to it. OverviewThis post de">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-06-10T03:10:21.000Z">
+<meta property="article:modified_time" content="2022-12-07T00:37:58.754Z">
+<meta property="article:author" content="jacobus brink">
+<meta property="article:tag" content="AWS">
+<meta property="article:tag" content="Amplify">
+<meta property="article:tag" content="SPA">
+<meta property="article:tag" content="Cognito">
+<meta property="article:tag" content="React">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/pkb-blog/atom.xml" title="Personal Knowledgebase Blog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/pkb-blog/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/pkb-blog/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/pkb-blog/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/pkb-blog/" id="logo">Personal Knowledgebase Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/pkb-blog/">Home</a>
+        
+          <a class="main-nav-link" href="/pkb-blog/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/pkb-blog/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jaxsbr.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-aws-amplify-auth-cognito" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/pkb-blog/2022/06/10/aws-amplify-auth-cognito/" class="article-date">
+  <time class="dt-published" datetime="2022-06-10T03:10:21.000Z" itemprop="datePublished">2022-06-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      AWS Amplify authentication with Cognito
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>AWS Amplify takes away a lot of the heavy lifting around hosting and deploying single page applications (SPA). But an application is useless if we can’t control user access to it.</p>
+<h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This post details the actions needed to:</p>
+<ul>
+<li>Create an Amplify project</li>
+<li>Add Cognito authentication to Amplify</li>
+<li>Add Users and User Groups to Cognito</li>
+</ul>
+<p>Assumptions</p>
+<ul>
+<li>You have a React app (I used create-react-app)</li>
+<li>You have this app in a compatible Amplify version control (I used CodeCommit)</li>
+</ul>
+<h2 id="Create-an-Amplify-project"><a href="#Create-an-Amplify-project" class="headerlink" title="Create an Amplify project"></a>Create an Amplify project</h2><p>Start in the AWS Amplify Console and select the <strong>Build app option</strong></p>
+<p>Select the Hosting environments tab</p>
+<ul>
+<li>Select a code repository the contain your UI code<ul>
+<li>Connect a branch (select repo and branch)</li>
+</ul>
+</li>
+<li>Configure build settings<ul>
+<li>Create environment (e.g. staging&#x2F;prod)</li>
+<li>Enable CICD (deploy on each front or backend commit)</li>
+</ul>
+</li>
+<li>Specify a service role (Allows Amplify to access your other AWS resources)<ul>
+<li>Create a Service Role <ul>
+<li>Select Amplify service</li>
+<li>Select AdministratorAccess-Amplify</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>After this you can review build settings in a generated yaml file</li>
+<li>Save and deploy the app</li>
+<li>You can now click on the <strong>Domain</strong> URL to view your live app.</li>
+</ul>
+<h2 id="Authentication"><a href="#Authentication" class="headerlink" title="Authentication"></a>Authentication</h2><h3 id="Configure-Amplify-App"><a href="#Configure-Amplify-App" class="headerlink" title="Configure Amplify App"></a>Configure Amplify App</h3><p>Select the Backend environments tab</p>
+<ul>
+<li>Initialy you have to click “Get Started” to enable the Backend tab. This takes a few minutes</li>
+<li>Click Launch Studio</li>
+<li>Go to the Set up &gt; Authentication tab<ul>
+<li>Add a login mechanism. (this is where you can specify federate login types. e.g. Google or Facebook). I chose a simple Email mechanism.</li>
+<li>Specify Sign-in &amp; sign-out URL’s. <ul>
+<li>This allows for multiple URLs. I specified both my local and production URL’s to allow login requirements for both environments.</li>
+</ul>
+</li>
+<li>You and also setup MFA and password rulese here. I opted for all the defaults, no MFA.</li>
+<li>Deploy</li>
+</ul>
+</li>
+<li>Save the new authentication setup. This will start a CloudFormation deployment.</li>
+<li>You can view the created authentication resouces in Cognito or CloudFormation.</li>
+</ul>
+<h3 id="Add-users-and-groups"><a href="#Add-users-and-groups" class="headerlink" title="Add users and groups"></a>Add users and groups</h3><p>While still in the Amplify Studio</p>
+<ul>
+<li>Select the Manage &gt; User management tab</li>
+<li>In the Users tab click Create User<ul>
+<li>Specify email and temporary password</li>
+</ul>
+</li>
+<li>In the Groups tab click Create Group<ul>
+<li>Specify a group name</li>
+<li>Select the new group and click Add User</li>
+<li>Specify the users to add</li>
+</ul>
+</li>
+</ul>
+<h3 id="Configure-SPA-App"><a href="#Configure-SPA-App" class="headerlink" title="Configure SPA App"></a>Configure SPA App</h3><p>Install the amplify CLI <a target="_blank" rel="noopener" href="https://docs.amplify.aws/cli/start/install/">from here</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g @aws-amplify/cli</span><br></pre></td></tr></table></figure>
+<ul>
+<li>From the Amplify application, Backend environments tab, find and expand the “Local setup instructions” toggle drop down.</li>
+<li>Copy and run the <code>amplify pull --appId &#123;your app id&#125; --envName &#123;your env&#125;</code> command in your UI project.</li>
+</ul>
+<p>This will sync the Cognito infrastructure and client credentials with your project. NOTE, the credentials are not commited to your source control. see “aws-exports.js” file</p>
+<p>Install the aws amplify npm dependencies</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install aws-amplify</span><br></pre></td></tr></table></figure>
+
+<p>Add a UI mechanism for sign-up, sign-in and sign-out.<br>Two options for doing this are:</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://docs.amplify.aws/lib/auth/getting-started/q/platform/js/#option-1-use-pre-built-ui-components">Pre-built UI components</a> (Opting for this one)</li>
+<li><a target="_blank" rel="noopener" href="https://docs.amplify.aws/lib/auth/emailpassword/q/platform/js/">API calls</a></li>
+</ol>
+<p>Install components for React</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install aws-amplify @aws-amplify/ui-react</span><br></pre></td></tr></table></figure>
+
+<p>Example of my App.js file</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Amplify</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;aws-amplify&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; withAuthenticator &#125; <span class="keyword">from</span> <span class="string">&#x27;@aws-amplify/ui-react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;@aws-amplify/ui-react/styles.css&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> awsExports <span class="keyword">from</span> <span class="string">&#x27;./aws-exports&#x27;</span>;</span><br><span class="line"><span class="title class_">Amplify</span>.<span class="title function_">configure</span>(awsExports);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params">&#123;signOut, user&#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello &#123;user.username&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;signOut&#125;</span>&gt;</span>Sign out<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">withAuthenticator</span>(<span class="title class_">App</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="Disable-self-service-sign-up"><a href="#Disable-self-service-sign-up" class="headerlink" title="Disable self-service sign-up"></a>Disable self-service sign-up</h3><p>By default users can register as user by following a Sign-up and email verification flow. For my purposes however I want a very specific list of users to have access to the app, thus I’d want to prevent the default sign-up action being possible.</p>
+<p>Go to AWS Cognito in the console</p>
+<ul>
+<li>Select the user pool</li>
+<li>Under the Sign-up experience tab select Edit self-service sign-up<ul>
+<li>Uncheck Enable self-registration</li>
+<li>Save changes</li>
+</ul>
+</li>
+</ul>
+<p>NOTE: this does not hide the “Create Account” option, merely prevents successful sign-ups. Ideal would be to hide as well.</p>
+<h2 id="Resources"><a href="#Resources" class="headerlink" title="Resources"></a>Resources</h2><p><a target="_blank" rel="noopener" href="https://docs.amplify.aws/console/">https://docs.amplify.aws/console/</a><br><a target="_blank" rel="noopener" href="https://docs.amplify.aws/console/auth/authentication/">https://docs.amplify.aws/console/auth/authentication/</a><br><a target="_blank" rel="noopener" href="https://docs.amplify.aws/console/authz/authorization/">https://docs.amplify.aws/console/authz/authorization/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jaxsbr.github.io/2022/06/10/aws-amplify-auth-cognito/" data-id="clbcxh3h2000020rv3838e66h" data-title="AWS Amplify authentication with Cognito" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/AWS/" rel="tag">AWS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Amplify/" rel="tag">Amplify</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Cognito/" rel="tag">Cognito</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/React/" rel="tag">React</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/SPA/" rel="tag">SPA</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/pkb-blog/2022/07/01/s3-signed-urls/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Sharing S3 files securely with Signed Urls
+        
+      </div>
+    </a>
+  
+  
+    <a href="/pkb-blog/2022/06/10/node-version-toggle/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Toggle nodejs versions</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/API-Gateway/" rel="tag">API Gateway</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AWS/" rel="tag">AWS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AWS-Lambda/" rel="tag">AWS Lambda</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Amazon-API-Gateway/" rel="tag">Amazon API Gateway</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Amplify/" rel="tag">Amplify</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Artificial-Intelligence/" rel="tag">Artificial Intelligence</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Bash/" rel="tag">Bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Boto3/" rel="tag">Boto3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/C/" rel="tag">C#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/CloudFormation/" rel="tag">CloudFormation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Cognito/" rel="tag">Cognito</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/DynamoDB/" rel="tag">DynamoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/ML/" rel="tag">ML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Machine-Learning/" rel="tag">Machine Learning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Neural-Networks/" rel="tag">Neural Networks</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Rate-limiting/" rel="tag">Rate limiting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/React/" rel="tag">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/S3/" rel="tag">S3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/SPA/" rel="tag">SPA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Script/" rel="tag">Script</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Signed-Url/" rel="tag">Signed Url</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Static-Website-Hosting/" rel="tag">Static Website Hosting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Throttling/" rel="tag">Throttling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/nodejs/" rel="tag">nodejs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/nvm/" rel="tag">nvm</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/pkb-blog/tags/AI/" style="font-size: 10px;">AI</a> <a href="/pkb-blog/tags/API-Gateway/" style="font-size: 10px;">API Gateway</a> <a href="/pkb-blog/tags/AWS/" style="font-size: 20px;">AWS</a> <a href="/pkb-blog/tags/AWS-Lambda/" style="font-size: 10px;">AWS Lambda</a> <a href="/pkb-blog/tags/Amazon-API-Gateway/" style="font-size: 10px;">Amazon API Gateway</a> <a href="/pkb-blog/tags/Amplify/" style="font-size: 10px;">Amplify</a> <a href="/pkb-blog/tags/Artificial-Intelligence/" style="font-size: 10px;">Artificial Intelligence</a> <a href="/pkb-blog/tags/Bash/" style="font-size: 10px;">Bash</a> <a href="/pkb-blog/tags/Boto3/" style="font-size: 10px;">Boto3</a> <a href="/pkb-blog/tags/C/" style="font-size: 10px;">C#</a> <a href="/pkb-blog/tags/CloudFormation/" style="font-size: 10px;">CloudFormation</a> <a href="/pkb-blog/tags/Cognito/" style="font-size: 15px;">Cognito</a> <a href="/pkb-blog/tags/DynamoDB/" style="font-size: 10px;">DynamoDB</a> <a href="/pkb-blog/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/pkb-blog/tags/ML/" style="font-size: 10px;">ML</a> <a href="/pkb-blog/tags/Machine-Learning/" style="font-size: 10px;">Machine Learning</a> <a href="/pkb-blog/tags/Neural-Networks/" style="font-size: 10px;">Neural Networks</a> <a href="/pkb-blog/tags/Python/" style="font-size: 10px;">Python</a> <a href="/pkb-blog/tags/Rate-limiting/" style="font-size: 10px;">Rate limiting</a> <a href="/pkb-blog/tags/React/" style="font-size: 10px;">React</a> <a href="/pkb-blog/tags/S3/" style="font-size: 15px;">S3</a> <a href="/pkb-blog/tags/SPA/" style="font-size: 10px;">SPA</a> <a href="/pkb-blog/tags/Script/" style="font-size: 10px;">Script</a> <a href="/pkb-blog/tags/Signed-Url/" style="font-size: 10px;">Signed Url</a> <a href="/pkb-blog/tags/Static-Website-Hosting/" style="font-size: 10px;">Static Website Hosting</a> <a href="/pkb-blog/tags/Throttling/" style="font-size: 10px;">Throttling</a> <a href="/pkb-blog/tags/nodejs/" style="font-size: 10px;">nodejs</a> <a href="/pkb-blog/tags/nvm/" style="font-size: 10px;">nvm</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/06/">June 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/05/">May 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/pkb-blog/2022/07/08/api-gateway-throttling/">Amazon API Gateway - Throttling</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2022/07/01/s3-signed-urls/">Sharing S3 files securely with Signed Urls</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2022/06/10/aws-amplify-auth-cognito/">AWS Amplify authentication with Cognito</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2022/06/10/node-version-toggle/">Toggle nodejs versions</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2022/05/27/neural-network-intro/">Neural Networks For This Dummy</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 jacobus brink<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/pkb-blog/" class="mobile-nav-link">Home</a>
+  
+    <a href="/pkb-blog/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/pkb-blog/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/pkb-blog/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/pkb-blog/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
