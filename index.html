@@ -71,6 +71,59 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-sql-cheatsheet" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/pkb-blog/2022/12/09/sql-cheatsheet/" class="article-date">
+  <time class="dt-published" datetime="2022-12-09T02:34:17.000Z" itemprop="datePublished">2022-12-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/pkb-blog/2022/12/09/sql-cheatsheet/">SQL Cheatsheet</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Info"><a href="#Info" class="headerlink" title="Info"></a>Info</h2><p>After struggling for hours on the interwebs I usually find the magic combination of SQL syntax for solving a particular problem.<br>The problem come in when I don’t frequently work with SQL and forget what the syntax was that I used.  </p>
+<p>Here is a collection of my favourite SQL snippets</p>
+<h3 id="Updates"><a href="#Updates" class="headerlink" title="Updates"></a>Updates</h3><p>Simple <code>Update</code> queryies specifies the table to modify, the columns and values to set and a <code>Where</code> clause to avoid updating all records in the table.  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> MyTable</span><br><span class="line"><span class="keyword">SET</span> Name <span class="operator">=</span> <span class="string">&#x27;sql noob&#x27;</span></span><br><span class="line"><span class="keyword">WHERE</span> Id <span class="operator">=</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>But what if you want to update multiple records each with a unique set of value. We can use an <code>Update From</code> approach. Typicall this requires a datasource containing the desired changes you want to apply to your table, and hopefully a matching identifier. If you have this you can join your datasource to the table you intend to change and do away with <code>Where</code>.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> MyTable</span><br><span class="line"><span class="keyword">SET</span> Name <span class="operator">=</span> tmp.Name</span><br><span class="line"><span class="keyword">FROM</span> #TempWithUpdates tmp</span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> MyTable my</span><br><span class="line">    <span class="keyword">ON</span> tmp.Id <span class="operator">=</span> my.Id</span><br></pre></td></tr></table></figure>
+
+<h3 id="Insert"><a href="#Insert" class="headerlink" title="Insert"></a>Insert</h3><p>todo</p>
+<h3 id="Delete"><a href="#Delete" class="headerlink" title="Delete"></a>Delete</h3><p>todo</p>
+<h3 id="Subqueries"><a href="#Subqueries" class="headerlink" title="Subqueries"></a>Subqueries</h3><p>todo</p>
+<h3 id="Merge"><a href="#Merge" class="headerlink" title="Merge"></a>Merge</h3><p>todo</p>
+<h3 id="Temp-Tables"><a href="#Temp-Tables" class="headerlink" title="Temp Tables"></a>Temp Tables</h3><p>todo</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jaxsbr.github.io/2022/12/09/sql-cheatsheet/" data-id="clbfwf7n40000nwrvgovq673i" data-title="SQL Cheatsheet" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/SQL/" rel="tag">SQL</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-api-gateway-throttling" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/pkb-blog/2022/07/08/api-gateway-throttling/" class="article-date">
@@ -709,7 +762,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/API-Gateway/" rel="tag">API Gateway</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AWS/" rel="tag">AWS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AWS-Lambda/" rel="tag">AWS Lambda</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Amazon-API-Gateway/" rel="tag">Amazon API Gateway</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Amplify/" rel="tag">Amplify</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Artificial-Intelligence/" rel="tag">Artificial Intelligence</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Bash/" rel="tag">Bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Boto3/" rel="tag">Boto3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/C/" rel="tag">C#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/CloudFormation/" rel="tag">CloudFormation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Cognito/" rel="tag">Cognito</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/DynamoDB/" rel="tag">DynamoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/ML/" rel="tag">ML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Machine-Learning/" rel="tag">Machine Learning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Neural-Networks/" rel="tag">Neural Networks</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Rate-limiting/" rel="tag">Rate limiting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/React/" rel="tag">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/S3/" rel="tag">S3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/SPA/" rel="tag">SPA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Script/" rel="tag">Script</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Signed-Url/" rel="tag">Signed Url</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Static-Website-Hosting/" rel="tag">Static Website Hosting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Throttling/" rel="tag">Throttling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/nodejs/" rel="tag">nodejs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/nvm/" rel="tag">nvm</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/API-Gateway/" rel="tag">API Gateway</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AWS/" rel="tag">AWS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AWS-Lambda/" rel="tag">AWS Lambda</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Amazon-API-Gateway/" rel="tag">Amazon API Gateway</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Amplify/" rel="tag">Amplify</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Artificial-Intelligence/" rel="tag">Artificial Intelligence</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Bash/" rel="tag">Bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Boto3/" rel="tag">Boto3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/C/" rel="tag">C#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/CloudFormation/" rel="tag">CloudFormation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Cognito/" rel="tag">Cognito</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/DynamoDB/" rel="tag">DynamoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/ML/" rel="tag">ML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Machine-Learning/" rel="tag">Machine Learning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Neural-Networks/" rel="tag">Neural Networks</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Rate-limiting/" rel="tag">Rate limiting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/React/" rel="tag">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/S3/" rel="tag">S3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/SPA/" rel="tag">SPA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/SQL/" rel="tag">SQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Script/" rel="tag">Script</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Signed-Url/" rel="tag">Signed Url</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Static-Website-Hosting/" rel="tag">Static Website Hosting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Throttling/" rel="tag">Throttling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/nodejs/" rel="tag">nodejs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/nvm/" rel="tag">nvm</a></li></ul>
     </div>
   </div>
 
@@ -719,7 +772,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/pkb-blog/tags/AI/" style="font-size: 10px;">AI</a> <a href="/pkb-blog/tags/API-Gateway/" style="font-size: 10px;">API Gateway</a> <a href="/pkb-blog/tags/AWS/" style="font-size: 20px;">AWS</a> <a href="/pkb-blog/tags/AWS-Lambda/" style="font-size: 10px;">AWS Lambda</a> <a href="/pkb-blog/tags/Amazon-API-Gateway/" style="font-size: 10px;">Amazon API Gateway</a> <a href="/pkb-blog/tags/Amplify/" style="font-size: 10px;">Amplify</a> <a href="/pkb-blog/tags/Artificial-Intelligence/" style="font-size: 10px;">Artificial Intelligence</a> <a href="/pkb-blog/tags/Bash/" style="font-size: 10px;">Bash</a> <a href="/pkb-blog/tags/Boto3/" style="font-size: 10px;">Boto3</a> <a href="/pkb-blog/tags/C/" style="font-size: 10px;">C#</a> <a href="/pkb-blog/tags/CloudFormation/" style="font-size: 10px;">CloudFormation</a> <a href="/pkb-blog/tags/Cognito/" style="font-size: 15px;">Cognito</a> <a href="/pkb-blog/tags/DynamoDB/" style="font-size: 10px;">DynamoDB</a> <a href="/pkb-blog/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/pkb-blog/tags/ML/" style="font-size: 10px;">ML</a> <a href="/pkb-blog/tags/Machine-Learning/" style="font-size: 10px;">Machine Learning</a> <a href="/pkb-blog/tags/Neural-Networks/" style="font-size: 10px;">Neural Networks</a> <a href="/pkb-blog/tags/Python/" style="font-size: 10px;">Python</a> <a href="/pkb-blog/tags/Rate-limiting/" style="font-size: 10px;">Rate limiting</a> <a href="/pkb-blog/tags/React/" style="font-size: 10px;">React</a> <a href="/pkb-blog/tags/S3/" style="font-size: 15px;">S3</a> <a href="/pkb-blog/tags/SPA/" style="font-size: 10px;">SPA</a> <a href="/pkb-blog/tags/Script/" style="font-size: 10px;">Script</a> <a href="/pkb-blog/tags/Signed-Url/" style="font-size: 10px;">Signed Url</a> <a href="/pkb-blog/tags/Static-Website-Hosting/" style="font-size: 10px;">Static Website Hosting</a> <a href="/pkb-blog/tags/Throttling/" style="font-size: 10px;">Throttling</a> <a href="/pkb-blog/tags/nodejs/" style="font-size: 10px;">nodejs</a> <a href="/pkb-blog/tags/nvm/" style="font-size: 10px;">nvm</a>
+      <a href="/pkb-blog/tags/AI/" style="font-size: 10px;">AI</a> <a href="/pkb-blog/tags/API-Gateway/" style="font-size: 10px;">API Gateway</a> <a href="/pkb-blog/tags/AWS/" style="font-size: 20px;">AWS</a> <a href="/pkb-blog/tags/AWS-Lambda/" style="font-size: 10px;">AWS Lambda</a> <a href="/pkb-blog/tags/Amazon-API-Gateway/" style="font-size: 10px;">Amazon API Gateway</a> <a href="/pkb-blog/tags/Amplify/" style="font-size: 10px;">Amplify</a> <a href="/pkb-blog/tags/Artificial-Intelligence/" style="font-size: 10px;">Artificial Intelligence</a> <a href="/pkb-blog/tags/Bash/" style="font-size: 10px;">Bash</a> <a href="/pkb-blog/tags/Boto3/" style="font-size: 10px;">Boto3</a> <a href="/pkb-blog/tags/C/" style="font-size: 10px;">C#</a> <a href="/pkb-blog/tags/CloudFormation/" style="font-size: 10px;">CloudFormation</a> <a href="/pkb-blog/tags/Cognito/" style="font-size: 15px;">Cognito</a> <a href="/pkb-blog/tags/DynamoDB/" style="font-size: 10px;">DynamoDB</a> <a href="/pkb-blog/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/pkb-blog/tags/ML/" style="font-size: 10px;">ML</a> <a href="/pkb-blog/tags/Machine-Learning/" style="font-size: 10px;">Machine Learning</a> <a href="/pkb-blog/tags/Neural-Networks/" style="font-size: 10px;">Neural Networks</a> <a href="/pkb-blog/tags/Python/" style="font-size: 10px;">Python</a> <a href="/pkb-blog/tags/Rate-limiting/" style="font-size: 10px;">Rate limiting</a> <a href="/pkb-blog/tags/React/" style="font-size: 10px;">React</a> <a href="/pkb-blog/tags/S3/" style="font-size: 15px;">S3</a> <a href="/pkb-blog/tags/SPA/" style="font-size: 10px;">SPA</a> <a href="/pkb-blog/tags/SQL/" style="font-size: 10px;">SQL</a> <a href="/pkb-blog/tags/Script/" style="font-size: 10px;">Script</a> <a href="/pkb-blog/tags/Signed-Url/" style="font-size: 10px;">Signed Url</a> <a href="/pkb-blog/tags/Static-Website-Hosting/" style="font-size: 10px;">Static Website Hosting</a> <a href="/pkb-blog/tags/Throttling/" style="font-size: 10px;">Throttling</a> <a href="/pkb-blog/tags/nodejs/" style="font-size: 10px;">nodejs</a> <a href="/pkb-blog/tags/nvm/" style="font-size: 10px;">nvm</a>
     </div>
   </div>
 
@@ -728,7 +781,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/06/">June 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/05/">May 2022</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/12/">December 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/06/">June 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/05/">May 2022</a></li></ul>
     </div>
   </div>
 
@@ -739,6 +792,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/pkb-blog/2022/12/09/sql-cheatsheet/">SQL Cheatsheet</a>
+          </li>
         
           <li>
             <a href="/pkb-blog/2022/07/08/api-gateway-throttling/">Amazon API Gateway - Throttling</a>
@@ -754,10 +811,6 @@
         
           <li>
             <a href="/pkb-blog/2022/06/10/node-version-toggle/">Toggle nodejs versions</a>
-          </li>
-        
-          <li>
-            <a href="/pkb-blog/2022/05/27/neural-network-intro/">Neural Networks For This Dummy</a>
           </li>
         
       </ul>
