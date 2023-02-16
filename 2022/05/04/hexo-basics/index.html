@@ -14,7 +14,7 @@
 <meta property="og:description" content="This blog was setup using Hexo. The following sections detail some of my learnings. So what is Hexo?Hexo is a static website site generator. You create blog entries using markdown language which Hexo">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-05-03T21:00:00.000Z">
-<meta property="article:modified_time" content="2022-12-07T00:37:58.754Z">
+<meta property="article:modified_time" content="2023-02-16T20:39:55.152Z">
 <meta property="article:author" content="jacobus brink">
 <meta property="article:tag" content="Hexo">
 <meta name="twitter:card" content="summary">
@@ -158,7 +158,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public_dir: public/pkb-blog</span><br></pre></td></tr></table></figure>
 
 <p><a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment">Deploy Documentation</a><br>Once we have website content, we can publish directly to Github.<br>First I had to update the <strong>_config.yml</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: &#x27;git&#x27;</span><br><span class="line">  repo: &#x27;https://github.com/Jaxsbr/pkb-blog.git&#x27;</span><br><span class="line">  branch: main</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: &#x27;git&#x27;</span><br><span class="line">  repo: &#x27;git@github.com:Jaxsbr/pkb-blog.git&#x27;</span><br><span class="line">  branch: main</span><br></pre></td></tr></table></figure>
 
 <p>Secondly I had to install a package the aids in git commits.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
