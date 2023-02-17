@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>How to Specify an AWS Profile in .NET SDK for DynamoDB | Personal Knowledgebase Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="IntroWorking with Amazon Web Services (AWS) DynamoDB in .NET applications can be a breeze with the AWS SDK for .NET. However, when working with multiple AWS accounts or users, it can become cumbersome">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to Specify an AWS Profile in .NET SDK for DynamoDB">
+<meta property="og:url" content="https://jaxsbr.github.io/2023/02/17/aws-profile-selection-dotnetsdk/index.html">
+<meta property="og:site_name" content="Personal Knowledgebase Blog">
+<meta property="og:description" content="IntroWorking with Amazon Web Services (AWS) DynamoDB in .NET applications can be a breeze with the AWS SDK for .NET. However, when working with multiple AWS accounts or users, it can become cumbersome">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-02-17T02:04:39.000Z">
+<meta property="article:modified_time" content="2023-02-17T03:17:53.322Z">
+<meta property="article:author" content="jacobus brink">
+<meta property="article:tag" content="AWS">
+<meta property="article:tag" content="Credentials">
+<meta property="article:tag" content="DynamoDb">
+<meta property="article:tag" content=".NET">
+<meta property="article:tag" content="SDK">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/pkb-blog/atom.xml" title="Personal Knowledgebase Blog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/pkb-blog/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/pkb-blog/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/pkb-blog/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/pkb-blog/" id="logo">Personal Knowledgebase Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/pkb-blog/">Home</a>
+        
+          <a class="main-nav-link" href="/pkb-blog/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/pkb-blog/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jaxsbr.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-aws-profile-selection-dotnetsdk" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/pkb-blog/2023/02/17/aws-profile-selection-dotnetsdk/" class="article-date">
+  <time class="dt-published" datetime="2023-02-17T02:04:39.000Z" itemprop="datePublished">2023-02-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      How to Specify an AWS Profile in .NET SDK for DynamoDB
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h1><p>Working with Amazon Web Services (AWS) DynamoDB in .NET applications can be a breeze with the AWS SDK for .NET. However, when working with multiple AWS accounts or users, it can become cumbersome to keep track of the different sets of AWS credentials. This is where AWS profiles come in handy.</p>
+<p>In this article, we will explore how to specify an AWS profile while working with the .NET SDK for AWS DynamoDB. By using an AWS profile, you can simplify the process of managing multiple AWS accounts and ensure that your application uses the correct set of AWS credentials.</p>
+<p>Then we’ll provide a step-by-step guide on how to set up an AWS profile, install and configure the AWS SDK for .NET, and use the AWS profile with the .NET SDK for DynamoDB. By the end of this article, you’ll have a better understanding of how to simplify your AWS credential management while working with DynamoDB in your .NET applications.</p>
+<h1 id="Setting-up-the-AWS-Profile"><a href="#Setting-up-the-AWS-Profile" class="headerlink" title="Setting up the AWS Profile"></a>Setting up the AWS Profile</h1><h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h2><ul>
+<li>AWS CLI installed; see <a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html">these instructions</a> for help</li>
+<li>AWS access and security keys generated; see <a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html#access-keys-and-secret-access-keys">these instructions</a> for help</li>
+</ul>
+<h2 id="Steps"><a href="#Steps" class="headerlink" title="Steps"></a>Steps</h2><p>To set up your AWS profile, follow these steps:</p>
+<ol>
+<li>Open your command prompt or terminal window.</li>
+<li>Run the <code>aws configure</code> command. This will prompt you for your AWS access key ID, secret access key, default region, and default output format preferences. Enter the values as prompted.</li>
+<li>After you have provided the necessary information, AWS CLI will save the settings as the default profile in two files: <code>.aws/config</code> and <code>.aws/credentials</code>.</li>
+<li>To set up an additional profile, run the <code>aws configure</code> command again, but this time include the <code>--profile MyProfileName</code> option. Replace <code>MyProfileName</code> with a name for your new profile.</li>
+<li>Provide the necessary information for your new profile, such as access key ID, secret access key, region, and output format preferences, when prompted.</li>
+<li>AWS CLI will save the settings for your new profile in the <code>.aws/config</code> and <code>.aws/credentials</code> files.</li>
+</ol>
+<p>That’s it! You now have multiple AWS profiles that you can use with the .NET SDK for DynamoDB.</p>
+<h1 id="Installing-and-Configuring-the-AWS-SDK-for-NET"><a href="#Installing-and-Configuring-the-AWS-SDK-for-NET" class="headerlink" title="Installing and Configuring the AWS SDK for .NET"></a>Installing and Configuring the AWS SDK for .NET</h1><h2 id="Installing"><a href="#Installing" class="headerlink" title="Installing"></a>Installing</h2><p>To install the <code>AWSSDK.DynamoDBv2</code> package:</p>
+<ol>
+<li>In Visual Studio’s Solution Explorer for your project, right-click to show the context menu, and choose “Manage NuGet Packages”.</li>
+<li>In the NuGet Package Manager, search for the <code>AWSSDK.DynamoDBv2</code> package and select the latest version to install.</li>
+</ol>
+<p>Your project will now have the necessary SDK packages installed for connecting to DynamoDB.</p>
+<h2 id="Configuring"><a href="#Configuring" class="headerlink" title="Configuring"></a>Configuring</h2><p>To use the default credentials with the <code>AmazonDynamoDBClient</code> object, you can simply instantiate the object without any parameters:</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AmazonDynamoDBClient client = <span class="keyword">new</span> AmazonDynamoDBClient(); </span><br></pre></td></tr></table></figure>
+
+<p>If you need to specify additional configuration options for your AmazonDynamoDBClient, you can create an instance of AmazonDynamoDBConfig and pass it to the constructor. For example, to set the AWS region to us-west-2, you can use the following code:</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AmazonDynamoDBConfig clientConfig = <span class="keyword">new</span> AmazonDynamoDBConfig &#123; RegionEndpoint = RegionEndpoint.USWest2 &#125;;</span><br><span class="line">AmazonDynamoDBClient client = <span class="keyword">new</span> AmazonDynamoDBClient(clientConfig);</span><br></pre></td></tr></table></figure>
+
+<h1 id="Using-the-AWS-Profile-with-the-NET-SDK-for-DynamoDB"><a href="#Using-the-AWS-Profile-with-the-NET-SDK-for-DynamoDB" class="headerlink" title="Using the AWS Profile with the .NET SDK for DynamoDB"></a>Using the AWS Profile with the .NET SDK for DynamoDB</h1><h2 id="Configure-an-AWS-profile"><a href="#Configure-an-AWS-profile" class="headerlink" title="Configure an AWS profile"></a>Configure an AWS profile</h2><p>If you want to use a different AWS account than the one configured as default, you can use the profile you created in Section 2. To do this, you can specify the profile name and retrieve associated profile credentials. This code creates a <code>CredentialProfileStoreChain</code> object, which loads the credentials associated with a named profile from the AWS credentials file (~&#x2F;.aws&#x2F;credentials). If found, the credentials are passed to the <code>AmazonDynamoDBClient</code> object.</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> credentialProfileStoreChain = <span class="keyword">new</span> CredentialProfileStoreChain();</span><br><span class="line"><span class="keyword">if</span> (credentialProfileStoreChain.TryGetAWSCredentials(<span class="string">&quot;MyProfileName&quot;</span>, <span class="keyword">out</span> <span class="keyword">var</span> awsCredentials))</span><br><span class="line">&#123;</span><br><span class="line">    AmazonDynamoDBConfig clientConfig = <span class="keyword">new</span> AmazonDynamoDBConfig &#123; RegionEndpoint = RegionEndpoint.USWest2 &#125;;</span><br><span class="line">    AmazonDynamoDBClient client =  <span class="keyword">new</span> AmazonDynamoDBClient(awsCredentials, clientConfig);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Note that you still need to specify the AWS region where your table is located, as shown in the code above.</p>
+<h2 id="Advantages-of-using-AWS-profiles-with-the-SDK"><a href="#Advantages-of-using-AWS-profiles-with-the-SDK" class="headerlink" title="Advantages of using AWS profiles with the SDK"></a>Advantages of using AWS profiles with the SDK</h2><p>Using an AWS profile with the SDK has several advantages over hardcoding access and secret keys directly in your code. For one, it’s more secure: instead of embedding your credentials in plain text within your code, you store them in a separate file that’s encrypted and protected. This makes it more difficult for attackers to gain access to your AWS account.</p>
+<p>Another advantage is that it simplifies the process of switching between AWS accounts or using different credentials for different applications. By creating multiple profiles with different access and secret keys, you can easily switch between them without having to modify your code or credentials each time.</p>
+<p>Overall, using an AWS profile with the SDK improves security, simplifies the management of multiple AWS accounts, and makes it easier to maintain and modify your code.</p>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>In this blog post, we covered the steps for setting up and using AWS profiles with the .NET SDK for DynamoDB. We began by introducing the concept of AWS profiles and the benefits of using them, including increased security and ease of use. We then provided a step-by-step guide for setting up an AWS profile, including prerequisites such as installing the AWS CLI and generating access and security keys.</p>
+<p>Next, we covered how to install and configure the AWS SDK for .NET and how to use the default profile. Finally, we explained how to use an AWS profile with the .NET SDK for DynamoDB, including an example code snippet and the advantages of using profiles for flexibility and ease of management.</p>
+<p>By following the instructions and best practices outlined in this blog post, you should be able to set up and use AWS profiles with the .NET SDK for DynamoDB more effectively and securely, giving you greater peace of mind and allowing you to focus on building great applications.</p>
+<h2 id="Resources"><a href="#Resources" class="headerlink" title="Resources"></a>Resources</h2><p>AWS CLI installation<br><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html">https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html</a>  </p>
+<p>Access and Secret access keys<br><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html#access-keys-and-secret-access-keys">https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html#access-keys-and-secret-access-keys</a>  </p>
+<p>AWS Credentials Configuration<br><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/CodeSamples.DotNet.html#CodeSamples.DotNet.Credentials">https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/CodeSamples.DotNet.html#CodeSamples.DotNet.Credentials</a>  </p>
+<p>CredentialsProfileStoreChain and Alternatives<br><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/sdk-for-net/v3/developer-guide/creds-locate.html">https://docs.aws.amazon.com/sdk-for-net/v3/developer-guide/creds-locate.html</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jaxsbr.github.io/2023/02/17/aws-profile-selection-dotnetsdk/" data-id="cle7yjdqe0000zkrvhck16lit" data-title="How to Specify an AWS Profile in .NET SDK for DynamoDB" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/NET/" rel="tag">.NET</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/AWS/" rel="tag">AWS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Credentials/" rel="tag">Credentials</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/DynamoDb/" rel="tag">DynamoDb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/SDK/" rel="tag">SDK</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/pkb-blog/2022/12/09/sql-cheatsheet/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">SQL Cheatsheet</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/NET/" rel="tag">.NET</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/API-Gateway/" rel="tag">API Gateway</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AWS/" rel="tag">AWS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AWS-Lambda/" rel="tag">AWS Lambda</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Amazon-API-Gateway/" rel="tag">Amazon API Gateway</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Amplify/" rel="tag">Amplify</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Artificial-Intelligence/" rel="tag">Artificial Intelligence</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Bash/" rel="tag">Bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Boto3/" rel="tag">Boto3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/C/" rel="tag">C#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/CloudFormation/" rel="tag">CloudFormation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Cognito/" rel="tag">Cognito</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Credentials/" rel="tag">Credentials</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/DynamoDB/" rel="tag">DynamoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/DynamoDb/" rel="tag">DynamoDb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/ML/" rel="tag">ML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Machine-Learning/" rel="tag">Machine Learning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Neural-Networks/" rel="tag">Neural Networks</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Rate-limiting/" rel="tag">Rate limiting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/React/" rel="tag">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/S3/" rel="tag">S3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/SDK/" rel="tag">SDK</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/SPA/" rel="tag">SPA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/SQL/" rel="tag">SQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Script/" rel="tag">Script</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Signed-Url/" rel="tag">Signed Url</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Static-Website-Hosting/" rel="tag">Static Website Hosting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Throttling/" rel="tag">Throttling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/nodejs/" rel="tag">nodejs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/nvm/" rel="tag">nvm</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/pkb-blog/tags/NET/" style="font-size: 10px;">.NET</a> <a href="/pkb-blog/tags/AI/" style="font-size: 10px;">AI</a> <a href="/pkb-blog/tags/API-Gateway/" style="font-size: 10px;">API Gateway</a> <a href="/pkb-blog/tags/AWS/" style="font-size: 20px;">AWS</a> <a href="/pkb-blog/tags/AWS-Lambda/" style="font-size: 10px;">AWS Lambda</a> <a href="/pkb-blog/tags/Amazon-API-Gateway/" style="font-size: 10px;">Amazon API Gateway</a> <a href="/pkb-blog/tags/Amplify/" style="font-size: 10px;">Amplify</a> <a href="/pkb-blog/tags/Artificial-Intelligence/" style="font-size: 10px;">Artificial Intelligence</a> <a href="/pkb-blog/tags/Bash/" style="font-size: 10px;">Bash</a> <a href="/pkb-blog/tags/Boto3/" style="font-size: 10px;">Boto3</a> <a href="/pkb-blog/tags/C/" style="font-size: 10px;">C#</a> <a href="/pkb-blog/tags/CloudFormation/" style="font-size: 10px;">CloudFormation</a> <a href="/pkb-blog/tags/Cognito/" style="font-size: 15px;">Cognito</a> <a href="/pkb-blog/tags/Credentials/" style="font-size: 10px;">Credentials</a> <a href="/pkb-blog/tags/DynamoDB/" style="font-size: 10px;">DynamoDB</a> <a href="/pkb-blog/tags/DynamoDb/" style="font-size: 10px;">DynamoDb</a> <a href="/pkb-blog/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/pkb-blog/tags/ML/" style="font-size: 10px;">ML</a> <a href="/pkb-blog/tags/Machine-Learning/" style="font-size: 10px;">Machine Learning</a> <a href="/pkb-blog/tags/Neural-Networks/" style="font-size: 10px;">Neural Networks</a> <a href="/pkb-blog/tags/Python/" style="font-size: 10px;">Python</a> <a href="/pkb-blog/tags/Rate-limiting/" style="font-size: 10px;">Rate limiting</a> <a href="/pkb-blog/tags/React/" style="font-size: 10px;">React</a> <a href="/pkb-blog/tags/S3/" style="font-size: 15px;">S3</a> <a href="/pkb-blog/tags/SDK/" style="font-size: 10px;">SDK</a> <a href="/pkb-blog/tags/SPA/" style="font-size: 10px;">SPA</a> <a href="/pkb-blog/tags/SQL/" style="font-size: 10px;">SQL</a> <a href="/pkb-blog/tags/Script/" style="font-size: 10px;">Script</a> <a href="/pkb-blog/tags/Signed-Url/" style="font-size: 10px;">Signed Url</a> <a href="/pkb-blog/tags/Static-Website-Hosting/" style="font-size: 10px;">Static Website Hosting</a> <a href="/pkb-blog/tags/Throttling/" style="font-size: 10px;">Throttling</a> <a href="/pkb-blog/tags/nodejs/" style="font-size: 10px;">nodejs</a> <a href="/pkb-blog/tags/nvm/" style="font-size: 10px;">nvm</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2023/02/">February 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/12/">December 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/06/">June 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/05/">May 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/pkb-blog/2023/02/17/aws-profile-selection-dotnetsdk/">How to Specify an AWS Profile in .NET SDK for DynamoDB</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2022/12/09/sql-cheatsheet/">SQL Cheatsheet</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2022/07/08/api-gateway-throttling/">Amazon API Gateway - Throttling</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2022/07/01/s3-signed-urls/">Sharing S3 files securely with Signed Urls</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2022/06/10/aws-amplify-auth-cognito/">AWS Amplify authentication with Cognito</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 jacobus brink<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/pkb-blog/" class="mobile-nav-link">Home</a>
+  
+    <a href="/pkb-blog/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/pkb-blog/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/pkb-blog/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/pkb-blog/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
