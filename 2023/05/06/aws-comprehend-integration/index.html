@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Integrate with AWS Comprehend SDK in C# | Personal Knowledgebase Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="OverviewAWS Comprehend is an easy to use cloud service that allows you to comprehend text by labeling each word with a language type such as verb, noun, proper noun and others. A probability rating is">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Integrate with AWS Comprehend SDK in C#">
+<meta property="og:url" content="https://jaxsbr.github.io/2023/05/06/aws-comprehend-integration/index.html">
+<meta property="og:site_name" content="Personal Knowledgebase Blog">
+<meta property="og:description" content="OverviewAWS Comprehend is an easy to use cloud service that allows you to comprehend text by labeling each word with a language type such as verb, noun, proper noun and others. A probability rating is">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-05-05T18:57:37.000Z">
+<meta property="article:modified_time" content="2023-05-06T00:31:31.881Z">
+<meta property="article:author" content="jacobus brink">
+<meta property="article:tag" content="AWS">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="C#">
+<meta property="article:tag" content="Integration">
+<meta property="article:tag" content="Comprehend">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/pkb-blog/atom.xml" title="Personal Knowledgebase Blog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/pkb-blog/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/pkb-blog/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/pkb-blog/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/pkb-blog/" id="logo">Personal Knowledgebase Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/pkb-blog/">Home</a>
+        
+          <a class="main-nav-link" href="/pkb-blog/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/pkb-blog/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jaxsbr.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-aws-comprehend-integration" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/pkb-blog/2023/05/06/aws-comprehend-integration/" class="article-date">
+  <time class="dt-published" datetime="2023-05-05T18:57:37.000Z" itemprop="datePublished">2023-05-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Integrate with AWS Comprehend SDK in C#
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h1><p>AWS Comprehend is an easy to use cloud service that allows you to comprehend text by labeling each word with a language type such as <code>verb</code>, <code>noun</code>, <code>proper noun</code> and others. A probability rating is also assigned allowing you to detemine how sure AWS Comprehend was about it’s clasification.</p>
+<p>In the post I will demonstrate how to use AWS Comprehend to take plain text and find specific word matches and bind them with executable commands. The commands I use here assumes we want to generate code repositories&#x2F;projects.</p>
+<h2 id="Example-Usage"><a href="#Example-Usage" class="headerlink" title="Example Usage"></a>Example Usage</h2><p><strong>Given Text:</strong> Create a new website named Eventz<br><strong>Task Output:</strong> Generate a new React git repo and name it Eventz  </p>
+<ul>
+<li><strong>Create</strong> a verb that indicates the need to make something from scratch.</li>
+<li><strong>new</strong> an adverb that indicates the something that needs to be made from scratch.</li>
+<li><strong>website</strong> a noun that indicates that front-end programming technology is to be used.</li>
+<li><strong>Eventz</strong> a proper noun that represents the “something’s” identity or name.</li>
+</ul>
+<p>NOTE: This is a very basic example and will only work for a couple of very specific text phrases. For more accuracy we’d need to utilize other techniques such as Large Language Models (LLM) to determine if the word is similar to something VS just a direct match.<br>e.g. website&#x2F;front-end&#x2F;page could all be considered accurate as web specific project.</p>
+<h2 id="Example-Repo"><a href="#Example-Repo" class="headerlink" title="Example Repo"></a>Example Repo</h2><p>You can checkout <a target="_blank" rel="noopener" href="https://github.com/Jaxsbr/AWSComprehendExample">this</a> example repo where I invoke the dotnet cli to manage projects based on a text phrase. It uses AWS Comprehend to extract meaning and matches it up with pre defined dotnet cli commands.</p>
+<h2 id="Basic-Use"><a href="#Basic-Use" class="headerlink" title="Basic Use"></a>Basic Use</h2><h3 id="AWS-Comprehend-SDK"><a href="#AWS-Comprehend-SDK" class="headerlink" title="AWS Comprehend SDK"></a>AWS Comprehend SDK</h3><p>Install via package manager console.<br><code>Install-Package AWSSDK.Comprehend -Version 3.7.104.10</code></p>
+<p>Or add directly to your <code>csproj</code> file</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PackageReference</span> <span class="attr">Include</span>=<span class="string">&quot;AWSSDK.Comprehend&quot;</span> <span class="attr">Version</span>=<span class="string">&quot;3.7.104.10&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ItemGroup</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Configuration"><a href="#Configuration" class="headerlink" title="Configuration"></a>Configuration</h3><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> Amazon;</span><br><span class="line"><span class="keyword">using</span> Amazon.Comprehend;</span><br><span class="line"><span class="keyword">using</span> Amazon.Comprehend.Model;</span><br><span class="line"><span class="keyword">using</span> System.Diagnostics;</span><br><span class="line"></span><br><span class="line">AWSConfigs.AWSProfileName = <span class="string">&quot;your-aws-profile&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> comprehendClient = <span class="keyword">new</span> AmazonComprehendClient();</span><br></pre></td></tr></table></figure>
+
+<h3 id="Things-our-system-cares-about"><a href="#Things-our-system-cares-about" class="headerlink" title="Things our system cares about"></a>Things our system cares about</h3><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> verbs = <span class="keyword">new</span> <span class="built_in">string</span>[] &#123; <span class="string">&quot;create&quot;</span>, <span class="string">&quot;delete&quot;</span> &#125;;</span><br><span class="line"><span class="keyword">var</span> projectTypes = <span class="keyword">new</span> <span class="built_in">string</span>[] &#123; <span class="string">&quot;desktop&quot;</span>, <span class="string">&quot;website&quot;</span> &#125;</span><br><span class="line"><span class="keyword">var</span> actions = <span class="keyword">new</span> List&lt;List&lt;<span class="built_in">string</span>&gt;&gt;</span><br><span class="line">&#123;</span><br><span class="line">    &#123; <span class="string">&quot;create&quot;</span>, <span class="string">&quot;desktop&quot;</span>, CreateDesktop &#125;,</span><br><span class="line">    &#123; <span class="string">&quot;create&quot;</span>, <span class="string">&quot;website&quot;</span>, CreateWebsite &#125;,</span><br><span class="line">    &#123; <span class="string">&quot;delete&quot;</span>, <span class="string">&quot;desktop&quot;</span>, DeleteDesktop &#125;,</span><br><span class="line">    &#123; <span class="string">&quot;delete&quot;</span>, <span class="string">&quot;website&quot;</span>, DeleteWebsite &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">CreateDesktop</span> (<span class="params"><span class="built_in">string</span> projectName</span>)</span> </span><br><span class="line">&#123; </span><br><span class="line">    <span class="comment">// Some code that creates a desktop application code repository </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ....</span></span><br><span class="line"><span class="comment">// CreateWebsite(string projectName) </span></span><br><span class="line"><span class="comment">// DeleteDesktop(string projectName) </span></span><br><span class="line"><span class="comment">// DeleteWebsite(string projectName) </span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="Comprehention-Detect-Syntax-clasify"><a href="#Comprehention-Detect-Syntax-clasify" class="headerlink" title="Comprehention Detect Syntax (clasify)"></a>Comprehention Detect Syntax (clasify)</h3><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> detectedSyntaxRequest = <span class="keyword">new</span> DetectSyntaxRequest</span><br><span class="line">&#123;</span><br><span class="line">    LanguageCode = SyntaxLanguageCode.En,</span><br><span class="line">    Text = <span class="string">&quot;create a new website named Eventz&quot;</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> detectedSyntaxResponse = <span class="keyword">await</span> comprehendClient.DetectSyntaxAsync(detectedSyntaxRequest);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Process-the-detected-syntaxt-repsonse"><a href="#Process-the-detected-syntaxt-repsonse" class="headerlink" title="Process the detected syntaxt repsonse"></a>Process the detected syntaxt repsonse</h3><p>At this point we have a categorized version of our original text. By processing the words and their assigned <code>Part Of Speech Tag Type</code> we determine if there are words that match parts our system cares about. Once we find a match, we store those words as specific variables that we’ll use later to build executable commands.</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// The thing that needs to be done. e.g. Creating/Deleting</span></span><br><span class="line"><span class="built_in">string</span> projectAction = <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// The type of thing. e.g. Desktop/Website code repository type</span></span><br><span class="line"><span class="built_in">string</span> projectType = <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Finally the the name of the thing. e.g. Eventz</span></span><br><span class="line"><span class="built_in">string</span> projectName = <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span> (<span class="keyword">var</span> syntaxToken <span class="keyword">in</span> detectedSyntaxResponse.SyntaxTokens)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> partOfSpeechTag = syntaxToken.PartOfSpeech.Tag;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (partOfSpeechTag == PartOfSpeechTagType.VERB &amp;&amp; verbs.Contains(partOfSpeechTag.ToLower()))</span><br><span class="line">    &#123;</span><br><span class="line">        projectAction = syntaxToken.Text;        </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (partOfSpeechTag == PartOfSpeechTagType.NOUN &amp;&amp; projectTypes.Contains(partOfSpeechTag.ToLower()))</span><br><span class="line">    &#123;</span><br><span class="line">        projectType = syntaxToken.Text;        </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Proper nouns contain are determined to have high probability of being a name</span></span><br><span class="line">    <span class="keyword">if</span> (partOfSpeechTag == PartOfSpeechTagType.PROPN)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Preserve casing</span></span><br><span class="line">        projectName = syntaxToken.Text;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Bind-comprehentions-the-executable-commands"><a href="#Bind-comprehentions-the-executable-commands" class="headerlink" title="Bind comprehentions the executable commands"></a>Bind comprehentions the executable commands</h3><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> action = actions.Where(x =&gt; x.Contains(projectAction) &amp;&amp; x.Contains(projectType));</span><br><span class="line"></span><br><span class="line"><span class="comment">// The third item (0 based = 2) in each action list represents the action to execute.</span></span><br><span class="line"><span class="keyword">var</span> actionCommand = action[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Execute the action command that will create or delete a desktop or website by name</span></span><br><span class="line">action(projectName);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jaxsbr.github.io/2023/05/06/aws-comprehend-integration/" data-id="clhb8bfi30000fkrvemucauyw" data-title="Integrate with AWS Comprehend SDK in C#" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/AI/" rel="tag">AI</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/AWS/" rel="tag">AWS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/C/" rel="tag">C#</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Comprehend/" rel="tag">Comprehend</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Integration/" rel="tag">Integration</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/pkb-blog/2023/05/01/chat-gpt-csharp-integration/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">ChatGPT C# Integration</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/NET/" rel="tag">.NET</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/API-Gateway/" rel="tag">API Gateway</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AWS/" rel="tag">AWS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AWS-Lambda/" rel="tag">AWS Lambda</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Amazon-API-Gateway/" rel="tag">Amazon API Gateway</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Amplify/" rel="tag">Amplify</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Artificial-Intelligence/" rel="tag">Artificial Intelligence</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Bash/" rel="tag">Bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Boto3/" rel="tag">Boto3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/C/" rel="tag">C#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/ChatGPT/" rel="tag">ChatGPT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/CloudFormation/" rel="tag">CloudFormation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Cognito/" rel="tag">Cognito</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Comprehend/" rel="tag">Comprehend</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Credentials/" rel="tag">Credentials</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/DynamoDB/" rel="tag">DynamoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/DynamoDb/" rel="tag">DynamoDb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Integration/" rel="tag">Integration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/ML/" rel="tag">ML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Machine-Learning/" rel="tag">Machine Learning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Neural-Networks/" rel="tag">Neural Networks</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Rate-limiting/" rel="tag">Rate limiting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/React/" rel="tag">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/S3/" rel="tag">S3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/SDK/" rel="tag">SDK</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/SPA/" rel="tag">SPA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/SQL/" rel="tag">SQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Script/" rel="tag">Script</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Signed-Url/" rel="tag">Signed Url</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Static-Website-Hosting/" rel="tag">Static Website Hosting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Throttling/" rel="tag">Throttling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/nodejs/" rel="tag">nodejs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/nvm/" rel="tag">nvm</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/pkb-blog/tags/NET/" style="font-size: 10px;">.NET</a> <a href="/pkb-blog/tags/AI/" style="font-size: 16.67px;">AI</a> <a href="/pkb-blog/tags/API-Gateway/" style="font-size: 10px;">API Gateway</a> <a href="/pkb-blog/tags/AWS/" style="font-size: 20px;">AWS</a> <a href="/pkb-blog/tags/AWS-Lambda/" style="font-size: 10px;">AWS Lambda</a> <a href="/pkb-blog/tags/Amazon-API-Gateway/" style="font-size: 10px;">Amazon API Gateway</a> <a href="/pkb-blog/tags/Amplify/" style="font-size: 10px;">Amplify</a> <a href="/pkb-blog/tags/Artificial-Intelligence/" style="font-size: 10px;">Artificial Intelligence</a> <a href="/pkb-blog/tags/Bash/" style="font-size: 10px;">Bash</a> <a href="/pkb-blog/tags/Boto3/" style="font-size: 10px;">Boto3</a> <a href="/pkb-blog/tags/C/" style="font-size: 13.33px;">C#</a> <a href="/pkb-blog/tags/ChatGPT/" style="font-size: 10px;">ChatGPT</a> <a href="/pkb-blog/tags/CloudFormation/" style="font-size: 10px;">CloudFormation</a> <a href="/pkb-blog/tags/Cognito/" style="font-size: 13.33px;">Cognito</a> <a href="/pkb-blog/tags/Comprehend/" style="font-size: 10px;">Comprehend</a> <a href="/pkb-blog/tags/Credentials/" style="font-size: 10px;">Credentials</a> <a href="/pkb-blog/tags/DynamoDB/" style="font-size: 10px;">DynamoDB</a> <a href="/pkb-blog/tags/DynamoDb/" style="font-size: 10px;">DynamoDb</a> <a href="/pkb-blog/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/pkb-blog/tags/Integration/" style="font-size: 13.33px;">Integration</a> <a href="/pkb-blog/tags/ML/" style="font-size: 10px;">ML</a> <a href="/pkb-blog/tags/Machine-Learning/" style="font-size: 10px;">Machine Learning</a> <a href="/pkb-blog/tags/Neural-Networks/" style="font-size: 10px;">Neural Networks</a> <a href="/pkb-blog/tags/Python/" style="font-size: 10px;">Python</a> <a href="/pkb-blog/tags/Rate-limiting/" style="font-size: 10px;">Rate limiting</a> <a href="/pkb-blog/tags/React/" style="font-size: 10px;">React</a> <a href="/pkb-blog/tags/S3/" style="font-size: 13.33px;">S3</a> <a href="/pkb-blog/tags/SDK/" style="font-size: 10px;">SDK</a> <a href="/pkb-blog/tags/SPA/" style="font-size: 10px;">SPA</a> <a href="/pkb-blog/tags/SQL/" style="font-size: 10px;">SQL</a> <a href="/pkb-blog/tags/Script/" style="font-size: 10px;">Script</a> <a href="/pkb-blog/tags/Signed-Url/" style="font-size: 10px;">Signed Url</a> <a href="/pkb-blog/tags/Static-Website-Hosting/" style="font-size: 10px;">Static Website Hosting</a> <a href="/pkb-blog/tags/Throttling/" style="font-size: 10px;">Throttling</a> <a href="/pkb-blog/tags/nodejs/" style="font-size: 10px;">nodejs</a> <a href="/pkb-blog/tags/nvm/" style="font-size: 10px;">nvm</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2023/05/">May 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2023/02/">February 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/12/">December 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/06/">June 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/05/">May 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/pkb-blog/2023/05/06/aws-comprehend-integration/">Integrate with AWS Comprehend SDK in C#</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2023/05/01/chat-gpt-csharp-integration/">ChatGPT C# Integration</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2023/02/17/aws-profile-selection-dotnetsdk/">How to Specify an AWS Profile in .NET SDK for DynamoDB</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2022/12/09/sql-cheatsheet/">SQL Cheatsheet</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2022/07/08/api-gateway-throttling/">Amazon API Gateway - Throttling</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 jacobus brink<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/pkb-blog/" class="mobile-nav-link">Home</a>
+  
+    <a href="/pkb-blog/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/pkb-blog/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/pkb-blog/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/pkb-blog/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

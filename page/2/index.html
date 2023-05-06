@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   
   
-  <title>Tag: ChatGPT | Personal Knowledgebase Blog</title>
+  <title>Personal Knowledgebase Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta property="og:type" content="website">
 <meta property="og:title" content="Personal Knowledgebase Blog">
-<meta property="og:url" content="https://jaxsbr.github.io/tags/ChatGPT/index.html">
+<meta property="og:url" content="https://jaxsbr.github.io/page/2/index.html">
 <meta property="og:site_name" content="Personal Knowledgebase Blog">
 <meta property="og:locale" content="en_US">
 <meta property="article:author" content="jacobus brink">
@@ -71,38 +71,128 @@
       <div class="outer">
         <section id="main">
   
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/pkb-blog/archives/2023" class="archive-year">2023</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/pkb-blog/2023/05/01/chat-gpt-csharp-integration/" class="archive-article-date">
-  <time class="dt-published" datetime="2023-05-01T05:20:56.000Z" itemprop="datePublished">May 1</time>
+    <article id="post-hexo-basics" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/pkb-blog/2022/05/04/hexo-basics/" class="article-date">
+  <time class="dt-published" datetime="2022-05-03T21:00:00.000Z" itemprop="datePublished">2022-05-04</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
     <h1 itemprop="name">
-      <a class="archive-article-title" href="/pkb-blog/2023/05/01/chat-gpt-csharp-integration/">ChatGPT C# Integration</a>
+      <a class="p-name article-title" href="/pkb-blog/2022/05/04/hexo-basics/">Hexo Basics</a>
     </h1>
   
 
-    </header>
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>This blog was setup using Hexo. The following sections detail some of my learnings.</p>
+<h3 id="So-what-is-Hexo"><a href="#So-what-is-Hexo" class="headerlink" title="So what is Hexo?"></a>So what is Hexo?</h3><p>Hexo is a static website site generator. You create blog entries using markdown language which Hexo will convert to website content (HTML, CSS) ready to be hosted.</p>
+<p>I followed a <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=Kt7u5kr_P5o&list=PLLAZ4kZ9dFpOMJR6D25ishrSedvsguVSm">tutorial series by Mike Dane</a> to get me up and running and also utilized the <a target="_blank" rel="noopener" href="https://hexo.io/docs/">official Hexo documentation</a>.</p>
+<h2 id="Instalation"><a href="#Instalation" class="headerlink" title="Instalation"></a>Instalation</h2><hr>
+<p>Add the hexo-cli tool globaly  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+
+<p>You can install the package instead, making the hexo commands only available within a project VS globaly anywhere.  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Getting-Started"><a href="#Getting-Started" class="headerlink" title="Getting Started"></a>Getting Started</h2><hr>
+<p>Creating the intial site.  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo init &#123;name of your site&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Running the site.  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo server</span><br></pre></td></tr></table></figure>
+
+<h2 id="Scaffolds"><a href="#Scaffolds" class="headerlink" title="Scaffolds"></a>Scaffolds</h2><hr>
+<p>Scaffolds folder contains template markdown files.<br>These files acts as the starting file when creating new post, drafts or pages.  </p>
+<p>You can create custom scaffolds by adding new <strong>.md</strong> files in the <strong>_scaffolds</strong> folder.</p>
+<h2 id="Source"><a href="#Source" class="headerlink" title="Source"></a>Source</h2><hr>
+<p>Source folder contains all your blog content content.<br><em><strong>e.g hexo-basics.md</strong></em></p>
+<h2 id="Themes"><a href="#Themes" class="headerlink" title="Themes"></a>Themes</h2><hr>
+<p><a target="_blank" rel="noopener" href="https://hexo.io/themes/">Official Hexo themes</a><br><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=A-muxF_6plc&list=PLLAZ4kZ9dFpOMJR6D25ishrSedvsguVSm&index=10">How to install a theme</a></p>
+<ul>
+<li>Themes folder contains a collection of styling content for the website.  </li>
+<li>The default theme include with Hexo is <strong>Landscape</strong>.  </li>
+<li>Themes can be customized or created from scratch.  </li>
+<li>Theme configs: <strong>&#x2F;_config.landscape.yml</strong></li>
+</ul>
+<h2 id="config-yml"><a href="#config-yml" class="headerlink" title="config.yml"></a>config.yml</h2><hr>
+<p>Configures various aspects of the site.<br><strong>e.g.</strong> <code>theme: landscape</code></p>
+<p>Set a url config to your actuall hosting site</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url: https://yourhostingsite</span><br></pre></td></tr></table></figure>
+
+<p>I have a github.io space where my personal wesite lives. I want my blog to live as a sub page, with the content served from a different repository than the main site. To configure this I did the following:<br>set the <code>url:</code> to <a href="https://jaxsbr.github.io/">https://jaxsbr.github.io/</a><br>set the <code>root:</code> to &#x2F;pkb-blog</p>
+<h2 id="Posts-Drafts-amp-Pages"><a href="#Posts-Drafts-amp-Pages" class="headerlink" title="Posts, Drafts &amp; Pages"></a>Posts, Drafts &amp; Pages</h2><hr>
+<h3 id="Post"><a href="#Post" class="headerlink" title="Post"></a>Post</h3><p>Create a new post in the source&#x2F;_posts directory. This automatically shows in your site.  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new &#123;post name&#125;</span><br></pre></td></tr></table></figure>
+
+<p>A URL is specified for new post inthis format:<br><strong><a target="_blank" rel="noopener" href="http://baseaddress/year/mo/dy/postname">http://baseAddress/year/mo/dy/postname</a></strong></p>
+<h3 id="Draft"><a href="#Draft" class="headerlink" title="Draft"></a>Draft</h3><p>You can also create draft posts. These arent’ show by default when launch the Hexo server.  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new draft &#123;draft post name&#125;</span><br></pre></td></tr></table></figure>
+
+<p>To show drafts, run the server with this argument:  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo server --draft</span><br></pre></td></tr></table></figure>
+
+<p>Publish a draft (from _draft to _post):  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo publish &#123;draft post name&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Page"><a href="#Page" class="headerlink" title="Page"></a>Page</h3><p>Creating a new page with Hexo, results in a new folder in the code structure.<br><strong>&#x2F;source&#x2F;{your page name}</strong>  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new page &#123;your page name&#125;</span><br></pre></td></tr></table></figure>
+
+<p>You can access this directly, without a date format as seen with new posts above:<br><strong><a target="_blank" rel="noopener" href="http://baseaddress/MyPage">http://baseAddress/MyPage</a></strong></p>
+<h2 id="Generate-and-Deploy"><a href="#Generate-and-Deploy" class="headerlink" title="Generate and Deploy"></a>Generate and Deploy</h2><p>We run the generate command to convert the markdown and other content to publishable website content.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo generate</span><br><span class="line">hexo g</span><br></pre></td></tr></table></figure>
+
+<p>You can configure where the content is output to by setting the <code>public_dir:</code> property in <strong>_config.yml</strong> file.<br>e.g. Note, I use a sub path to simulate what my directory looks like when live</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public_dir: public/pkb-blog</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment">Deploy Documentation</a><br>Once we have website content, we can publish directly to Github.<br>First I had to update the <strong>_config.yml</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: &#x27;git&#x27;</span><br><span class="line">  repo: &#x27;git@github.com:Jaxsbr/pkb-blog.git&#x27;</span><br><span class="line">  branch: main</span><br></pre></td></tr></table></figure>
+
+<p>Secondly I had to install a package the aids in git commits.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+
+<p>To deploy we run</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo deploy</span><br></pre></td></tr></table></figure>
+
+<h2 id="Time-Saver"><a href="#Time-Saver" class="headerlink" title="Time Saver"></a>Time Saver</h2><p>Once all of the above is setup and you only need to create content, using the following step will optimize your workflow.</p>
+<ol>
+<li>Make you markdown change (actual blog content)</li>
+<li>Run <code>hexo server</code> and preview changes</li>
+<li>Run <code>hexo g -d</code> to both generate and deploy live</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jaxsbr.github.io/2022/05/04/hexo-basics/" data-id="clbcxh3h9000420rvfnofhbcb" data-title="Hexo Basics" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Hexo/" rel="tag">Hexo</a></li></ul>
+
+    </footer>
   </div>
+  
 </article>
-  
-  
-    </div></section>
+
+
+
   
 
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/pkb-blog/">&laquo; Prev</a><a class="page-number" href="/pkb-blog/">1</a><span class="page-number current">2</span>
+  </nav>
 
 </section>
         
