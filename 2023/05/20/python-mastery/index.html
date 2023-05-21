@@ -4,22 +4,21 @@
   <meta charset="utf-8">
   
   
-  <title>Amazon API Gateway - Throttling | Personal Knowledgebase Blog</title>
+  <title>Python Mastery - From Zero to Hero | Personal Knowledgebase Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="IntroAPI Gateway provides me with great coordination and routing capabilities, but without the neccessary checks it can also put a big dent in my pocket. 💲💲💲   I often prototype ideas that don’t ch">
+  <meta name="description" content="Overview of Python Blog SeriesIn this series, we will embark on a journey of learning and exploration in various areas of Python programming. As a fellow student on this path, I aim to share my insigh">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Amazon API Gateway - Throttling">
-<meta property="og:url" content="https://jaxsbr.github.io/2022/07/08/api-gateway-throttling/index.html">
+<meta property="og:title" content="Python Mastery - From Zero to Hero">
+<meta property="og:url" content="https://jaxsbr.github.io/2023/05/20/python-mastery/index.html">
 <meta property="og:site_name" content="Personal Knowledgebase Blog">
-<meta property="og:description" content="IntroAPI Gateway provides me with great coordination and routing capabilities, but without the neccessary checks it can also put a big dent in my pocket. 💲💲💲   I often prototype ideas that don’t ch">
+<meta property="og:description" content="Overview of Python Blog SeriesIn this series, we will embark on a journey of learning and exploration in various areas of Python programming. As a fellow student on this path, I aim to share my insigh">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-07-08T03:28:49.000Z">
-<meta property="article:modified_time" content="2022-12-07T00:37:58.753Z">
+<meta property="article:published_time" content="2023-05-20T08:35:19.000Z">
+<meta property="article:modified_time" content="2023-05-21T20:06:02.750Z">
 <meta property="article:author" content="jacobus brink">
-<meta property="article:tag" content="AWS">
-<meta property="article:tag" content="Amazon API Gateway">
-<meta property="article:tag" content="Throttling">
-<meta property="article:tag" content="Rate limiting">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Series">
+<meta property="article:tag" content="Mastery">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/pkb-blog/atom.xml" title="Personal Knowledgebase Blog" type="application/atom+xml">
@@ -77,10 +76,10 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-api-gateway-throttling" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-python-mastery" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/pkb-blog/2022/07/08/api-gateway-throttling/" class="article-date">
-  <time class="dt-published" datetime="2022-07-08T03:28:49.000Z" itemprop="datePublished">2022-07-08</time>
+    <a href="/pkb-blog/2023/05/20/python-mastery/" class="article-date">
+  <time class="dt-published" datetime="2023-05-20T08:35:19.000Z" itemprop="datePublished">2023-05-20</time>
 </a>
     
   </div>
@@ -91,7 +90,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      Amazon API Gateway - Throttling
+      Python Mastery - From Zero to Hero
     </h1>
   
 
@@ -99,42 +98,33 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h2><p>API Gateway provides me with great coordination and routing capabilities, but without the neccessary checks it can also put a big dent in my pocket. 💲💲💲  </p>
-<p>I often prototype ideas that don’t check the “production ready” criteria. This means that I can put something together quickly and have it meet my needs, but at the same time be vulnerable to accidental&#x2F;intentional over-use.  </p>
-<p>The post constains details on how throttling works and how to configure it, even for smaller projects. 😉</p>
-<h2 id="Request-submission-measurement"><a href="#Request-submission-measurement" class="headerlink" title="Request submission measurement"></a>Request submission measurement</h2><p>A “token bucket algorithm” is used to measure request submision rate.</p>
-<blockquote>
-<p>API Gateway doesn’t enforce a quota on concurrent connections. The maximum number of concurrent connections is determined by the rate of new connections per second and maximum connection duration of two hours. For example, with the default quota of 500 new connections per second, if clients connect at the maximum rate over two hours, API Gateway can serve up to 3,600,000 concurrent connections.</p>
-</blockquote>
-<h2 id="Request-measurement-types"><a href="#Request-measurement-types" class="headerlink" title="Request measurement types"></a>Request measurement types</h2><p>There are two types of usage clasification used to messure API requests, namely, steady-state and burst request.</p>
-<h4 id="Steady-State"><a href="#Steady-State" class="headerlink" title="Steady State"></a>Steady State</h4><p>A request per second (RPS) measure accross all API’s within an AWS account, per Region. This is what can be considered normal request rate traffic for your API endpoints. Also refered to as the <strong>token</strong>.</p>
-<h4 id="Burst"><a href="#Burst" class="headerlink" title="Burst"></a>Burst</h4><p>A maximum concurrent request rate accross all API’s within an AWS account, per Region. Typically and unexpected amount of request in a given period of time. Also refered to as the <strong>bucket</strong>.</p>
-<h2 id="Throttling-options"><a href="#Throttling-options" class="headerlink" title="Throttling options"></a>Throttling options</h2><p>API Gateway provides these options for configuring throttling:</p>
+        <h2 id="Overview-of-Python-Blog-Series"><a href="#Overview-of-Python-Blog-Series" class="headerlink" title="Overview of Python Blog Series"></a>Overview of Python Blog Series</h2><p>In this series, we will embark on a journey of learning and exploration in various areas of Python programming. As a fellow student on this path, I aim to share my insights and experiences to help you develop a strong foundation in the language. Together, we will dive into the following areas:</p>
 <ul>
-<li>Account-level: All routes and stages use the same throttling limit</li>
-<li>Stage-level: All routes in the statge uses the same throttling limit</li>
-<li>Route-level: Only the individual route uses the configured throttling limit</li>
+<li>General</li>
+<li>Web Development</li>
+<li>Data Science and Machine Learning</li>
+<li>GUI Development</li>
+<li>Data Visualization</li>
+<li>Game Development</li>
+<li>Automation and Scripting</li>
 </ul>
-<p>NOTE: the default route throttling limits can’t exceed the account-level rate limits, we have to configure explicitly to do so.</p>
-<h2 id="Limitation-and-quotas"><a href="#Limitation-and-quotas" class="headerlink" title="Limitation and quotas"></a>Limitation and quotas</h2><p>There is a cap of what limits can be set per account per region. This can however be adjusted via by reaching out to AWS Support Center.</p>
-<h2 id="So-what-does-the-API-caller-see-when-throttled"><a href="#So-what-does-the-API-caller-see-when-throttled" class="headerlink" title="So what does the API caller see when throttled?"></a>So what does the API caller see when throttled?</h2><p>They get back a <code>429 Too Many Requests</code> error response</p>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-request-throttling.html">Throttle API requests for better throughput</a></li>
-<li><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-throttling.html">Throttling request to your HTTP API</a></li>
-<li><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/limits.html">Amazon API Gateway quotas and important notes</a></li>
-<li><a target="_blank" rel="noopener" href="https://console.aws.amazon.com/support/home#/">Request higher request quota - AWS Support Center</a></li>
-<li><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigateway-usageplan-throttlesettings.html">CloudFormation ThrottleSettings</a></li>
-<li><a target="_blank" rel="noopener" href="https://beabetterdev.com/2021/10/01/aws-api-gateway-request-throttling/">AWS API Gateway Throttling – Setup and Walkthrough</a></li>
+<p>Additionally, I’ve compiled a comprehensive list of library references organized according to each area covered in this blog series. You can find the detailed references in my <a href="https://jaxsbr.github.io/pkb-blog/2023/05/21/python-reference-guide/">Reference Guide</a>.</p>
+<p>Join me as we navigate through these domains, expand our Python skills, and progress towards mastery. Through practical examples, hands-on projects, and in-depth discussions, we will learn and grow together. Get ready for an exciting adventure into the world of Python!</p>
+<h2 id="Parts"><a href="#Parts" class="headerlink" title="Parts"></a>Parts</h2><ul>
+<li><a href="https://jaxsbr.github.io/pkb-blog/2023/05/20/python-series-part1/">General: Introduction to Python IDLE</a></li>
+</ul>
+<h2 id="Resources"><a href="#Resources" class="headerlink" title="Resources"></a>Resources</h2><ul>
+<li>Visit the official Python website at <a target="_blank" rel="noopener" href="https://www.python.org/">python.org</a>.</li>
 </ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jaxsbr.github.io/2022/07/08/api-gateway-throttling/" data-id="clbcxh3h6000120rv2qvggzu8" data-title="Amazon API Gateway - Throttling" class="article-share-link">Share</a>
+      <a data-url="https://jaxsbr.github.io/2023/05/20/python-mastery/" data-id="clhxumn3p0001uorv8kxyd1eq" data-title="Python Mastery - From Zero to Hero" class="article-share-link">Share</a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/AWS/" rel="tag">AWS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Amazon-API-Gateway/" rel="tag">Amazon API Gateway</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Rate-limiting/" rel="tag">Rate limiting</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Throttling/" rel="tag">Throttling</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Mastery/" rel="tag">Mastery</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Python/" rel="tag">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Series/" rel="tag">Series</a></li></ul>
 
     </footer>
   </div>
@@ -142,19 +132,19 @@
     
 <nav id="article-nav">
   
-    <a href="/pkb-blog/2022/12/09/sql-cheatsheet/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/pkb-blog/2023/05/21/python-reference-guide/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          SQL Cheatsheet
+          Python Power-Up - Your Ultimate Reference Guide and Library Lookup
         
       </div>
     </a>
   
   
-    <a href="/pkb-blog/2022/07/01/s3-signed-urls/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/pkb-blog/2023/05/20/python-mastery-general-idle/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Sharing S3 files securely with Signed Urls</div>
+      <div class="article-nav-title">Python Mastery - General: Introduction to Python IDLE</div>
     </a>
   
 </nav>

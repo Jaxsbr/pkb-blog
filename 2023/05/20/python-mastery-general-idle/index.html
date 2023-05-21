@@ -4,22 +4,21 @@
   <meta charset="utf-8">
   
   
-  <title>Amazon API Gateway - Throttling | Personal Knowledgebase Blog</title>
+  <title>Python Mastery - General: Introduction to Python IDLE | Personal Knowledgebase Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="IntroAPI Gateway provides me with great coordination and routing capabilities, but without the neccessary checks it can also put a big dent in my pocket. 💲💲💲   I often prototype ideas that don’t ch">
+  <meta name="description" content="OverviewWe’ll explore Python IDLE, an integrated development environment (IDE) that comes bundled with Python. Python IDLE provides a convenient way to write, edit, and execute Python code. Prerequisi">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Amazon API Gateway - Throttling">
-<meta property="og:url" content="https://jaxsbr.github.io/2022/07/08/api-gateway-throttling/index.html">
+<meta property="og:title" content="Python Mastery - General: Introduction to Python IDLE">
+<meta property="og:url" content="https://jaxsbr.github.io/2023/05/20/python-mastery-general-idle/index.html">
 <meta property="og:site_name" content="Personal Knowledgebase Blog">
-<meta property="og:description" content="IntroAPI Gateway provides me with great coordination and routing capabilities, but without the neccessary checks it can also put a big dent in my pocket. 💲💲💲   I often prototype ideas that don’t ch">
+<meta property="og:description" content="OverviewWe’ll explore Python IDLE, an integrated development environment (IDE) that comes bundled with Python. Python IDLE provides a convenient way to write, edit, and execute Python code. Prerequisi">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-07-08T03:28:49.000Z">
-<meta property="article:modified_time" content="2022-12-07T00:37:58.753Z">
+<meta property="article:published_time" content="2023-05-20T08:04:54.000Z">
+<meta property="article:modified_time" content="2023-05-21T20:03:39.273Z">
 <meta property="article:author" content="jacobus brink">
-<meta property="article:tag" content="AWS">
-<meta property="article:tag" content="Amazon API Gateway">
-<meta property="article:tag" content="Throttling">
-<meta property="article:tag" content="Rate limiting">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Windows">
+<meta property="article:tag" content="IDLE">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/pkb-blog/atom.xml" title="Personal Knowledgebase Blog" type="application/atom+xml">
@@ -77,10 +76,10 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-api-gateway-throttling" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-python-mastery-general-idle" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/pkb-blog/2022/07/08/api-gateway-throttling/" class="article-date">
-  <time class="dt-published" datetime="2022-07-08T03:28:49.000Z" itemprop="datePublished">2022-07-08</time>
+    <a href="/pkb-blog/2023/05/20/python-mastery-general-idle/" class="article-date">
+  <time class="dt-published" datetime="2023-05-20T08:04:54.000Z" itemprop="datePublished">2023-05-20</time>
 </a>
     
   </div>
@@ -91,7 +90,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      Amazon API Gateway - Throttling
+      Python Mastery - General: Introduction to Python IDLE
     </h1>
   
 
@@ -99,42 +98,29 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h2><p>API Gateway provides me with great coordination and routing capabilities, but without the neccessary checks it can also put a big dent in my pocket. 💲💲💲  </p>
-<p>I often prototype ideas that don’t check the “production ready” criteria. This means that I can put something together quickly and have it meet my needs, but at the same time be vulnerable to accidental&#x2F;intentional over-use.  </p>
-<p>The post constains details on how throttling works and how to configure it, even for smaller projects. 😉</p>
-<h2 id="Request-submission-measurement"><a href="#Request-submission-measurement" class="headerlink" title="Request submission measurement"></a>Request submission measurement</h2><p>A “token bucket algorithm” is used to measure request submision rate.</p>
-<blockquote>
-<p>API Gateway doesn’t enforce a quota on concurrent connections. The maximum number of concurrent connections is determined by the rate of new connections per second and maximum connection duration of two hours. For example, with the default quota of 500 new connections per second, if clients connect at the maximum rate over two hours, API Gateway can serve up to 3,600,000 concurrent connections.</p>
-</blockquote>
-<h2 id="Request-measurement-types"><a href="#Request-measurement-types" class="headerlink" title="Request measurement types"></a>Request measurement types</h2><p>There are two types of usage clasification used to messure API requests, namely, steady-state and burst request.</p>
-<h4 id="Steady-State"><a href="#Steady-State" class="headerlink" title="Steady State"></a>Steady State</h4><p>A request per second (RPS) measure accross all API’s within an AWS account, per Region. This is what can be considered normal request rate traffic for your API endpoints. Also refered to as the <strong>token</strong>.</p>
-<h4 id="Burst"><a href="#Burst" class="headerlink" title="Burst"></a>Burst</h4><p>A maximum concurrent request rate accross all API’s within an AWS account, per Region. Typically and unexpected amount of request in a given period of time. Also refered to as the <strong>bucket</strong>.</p>
-<h2 id="Throttling-options"><a href="#Throttling-options" class="headerlink" title="Throttling options"></a>Throttling options</h2><p>API Gateway provides these options for configuring throttling:</p>
-<ul>
-<li>Account-level: All routes and stages use the same throttling limit</li>
-<li>Stage-level: All routes in the statge uses the same throttling limit</li>
-<li>Route-level: Only the individual route uses the configured throttling limit</li>
-</ul>
-<p>NOTE: the default route throttling limits can’t exceed the account-level rate limits, we have to configure explicitly to do so.</p>
-<h2 id="Limitation-and-quotas"><a href="#Limitation-and-quotas" class="headerlink" title="Limitation and quotas"></a>Limitation and quotas</h2><p>There is a cap of what limits can be set per account per region. This can however be adjusted via by reaching out to AWS Support Center.</p>
-<h2 id="So-what-does-the-API-caller-see-when-throttled"><a href="#So-what-does-the-API-caller-see-when-throttled" class="headerlink" title="So what does the API caller see when throttled?"></a>So what does the API caller see when throttled?</h2><p>They get back a <code>429 Too Many Requests</code> error response</p>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-request-throttling.html">Throttle API requests for better throughput</a></li>
-<li><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-throttling.html">Throttling request to your HTTP API</a></li>
-<li><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/limits.html">Amazon API Gateway quotas and important notes</a></li>
-<li><a target="_blank" rel="noopener" href="https://console.aws.amazon.com/support/home#/">Request higher request quota - AWS Support Center</a></li>
-<li><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigateway-usageplan-throttlesettings.html">CloudFormation ThrottleSettings</a></li>
-<li><a target="_blank" rel="noopener" href="https://beabetterdev.com/2021/10/01/aws-api-gateway-request-throttling/">AWS API Gateway Throttling – Setup and Walkthrough</a></li>
-</ul>
+        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>We’ll explore Python IDLE, an integrated development environment (IDE) that comes bundled with Python. Python IDLE provides a convenient way to write, edit, and execute Python code.</p>
+<h2 id="Prerequisite-Installing-Python"><a href="#Prerequisite-Installing-Python" class="headerlink" title="Prerequisite: Installing Python"></a>Prerequisite: Installing Python</h2><p>To use Python IDLE on your Windows machine, you need to have Python installed. If you haven’t installed Python yet you can find info on the official <a target="_blank" rel="noopener" href="https://www.python.org/about/gettingstarted/">Getting Started</a> page.</p>
+<h2 id="Finding-Python-IDLE"><a href="#Finding-Python-IDLE" class="headerlink" title="Finding Python IDLE"></a>Finding Python IDLE</h2><ol>
+<li>Press the Windows key on your keyboard or click the Start button.</li>
+<li>Type “IDLE” in the search bar.</li>
+<li>Select “IDLE (Python X.Y)” from the search results, where “X.Y” represents the version number of Python installed on your machine.</li>
+</ol>
+<h2 id="Creating-and-Running-the-Code-Snippet"><a href="#Creating-and-Running-the-Code-Snippet" class="headerlink" title="Creating and Running the Code Snippet"></a>Creating and Running the Code Snippet</h2><ol>
+<li>Open a new file in Python IDLE by selecting “File” -&gt; “New File” from the menu or pressing Ctrl+N.</li>
+<li>Copy and paste the following code snippet into the new file:<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="comment"># Generate a random number between 1 and 20</span></span><br><span class="line">secret_number = random.randint(<span class="number">1</span>, <span class="number">20</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Initialize the number of attempts</span></span><br><span class="line">attempts = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Welcome to Guess the Number!&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="comment"># Prompt the user to guess the number</span></span><br><span class="line">    guess = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;Guess a number between 1 and 20: &quot;</span>))</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Increment the number of attempts</span></span><br><span class="line">    attempts += <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Compare the guess with the secret number</span></span><br><span class="line">    <span class="keyword">if</span> guess &lt; secret_number:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Too low!&quot;</span>)</span><br><span class="line">    <span class="keyword">elif</span> guess &gt; secret_number:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Too high!&quot;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Congratulations! You guessed the number in <span class="subst">&#123;attempts&#125;</span> attempts.&quot;</span>)</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li>Save the file with a .py extension (e.g., guess_the_number.py) by selecting “File” -&gt; “Save” from the menu or pressing Ctrl+S.</li>
+<li>Run the code by selecting “Run” -&gt; “Run Module” from the menu or pressing F5.</li>
+</ol>
+<p>The Python shell in IDLE will then display the output of the program and prompt you for input as necessary.</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jaxsbr.github.io/2022/07/08/api-gateway-throttling/" data-id="clbcxh3h6000120rv2qvggzu8" data-title="Amazon API Gateway - Throttling" class="article-share-link">Share</a>
+      <a data-url="https://jaxsbr.github.io/2023/05/20/python-mastery-general-idle/" data-id="clhxumn3k0000uorvhwru3ljn" data-title="Python Mastery - General: Introduction to Python IDLE" class="article-share-link">Share</a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/AWS/" rel="tag">AWS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Amazon-API-Gateway/" rel="tag">Amazon API Gateway</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Rate-limiting/" rel="tag">Rate limiting</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Throttling/" rel="tag">Throttling</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/IDLE/" rel="tag">IDLE</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Python/" rel="tag">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Windows/" rel="tag">Windows</a></li></ul>
 
     </footer>
   </div>
@@ -142,19 +128,19 @@
     
 <nav id="article-nav">
   
-    <a href="/pkb-blog/2022/12/09/sql-cheatsheet/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/pkb-blog/2023/05/20/python-mastery/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          SQL Cheatsheet
+          Python Mastery - From Zero to Hero
         
       </div>
     </a>
   
   
-    <a href="/pkb-blog/2022/07/01/s3-signed-urls/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/pkb-blog/2023/05/10/ai-fundementals-six-principles-responsible-design/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Sharing S3 files securely with Signed Urls</div>
+      <div class="article-nav-title">Microsoft&#39;s Responsible AI Principles for Building Ethical AI Systems</div>
     </a>
   
 </nav>
