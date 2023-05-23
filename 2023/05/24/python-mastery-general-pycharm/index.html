@@ -4,14 +4,21 @@
   <meta charset="utf-8">
   
   
-  <title>Tag: Static Website Hosting | Personal Knowledgebase Blog</title>
+  <title>Python Mastery - General: Introduction to PyCharm | Personal Knowledgebase Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Personal Knowledgebase Blog">
-<meta property="og:url" content="https://jaxsbr.github.io/tags/Static-Website-Hosting/index.html">
+  <meta name="description" content="OverviewWe’ll quickly setup and test the PyCharm integrated development environment (IDE) made by JetBrains. PyCharm is the most popular code editor for Python. Prerequisite: Installing PythonTo use P">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python Mastery - General: Introduction to PyCharm">
+<meta property="og:url" content="https://jaxsbr.github.io/2023/05/24/python-mastery-general-pycharm/index.html">
 <meta property="og:site_name" content="Personal Knowledgebase Blog">
+<meta property="og:description" content="OverviewWe’ll quickly setup and test the PyCharm integrated development environment (IDE) made by JetBrains. PyCharm is the most popular code editor for Python. Prerequisite: Installing PythonTo use P">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-05-23T18:42:35.000Z">
+<meta property="article:modified_time" content="2023-05-23T19:19:56.473Z">
 <meta property="article:author" content="jacobus brink">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="IDE">
+<meta property="article:tag" content="PyCharm">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/pkb-blog/atom.xml" title="Personal Knowledgebase Blog" type="application/atom+xml">
@@ -69,39 +76,75 @@
 </header>
 
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/pkb-blog/archives/2022" class="archive-year">2022</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/pkb-blog/2022/05/19/host-a-static-website-with-aws-s3/" class="archive-article-date">
-  <time class="dt-published" datetime="2022-05-18T18:16:57.000Z" itemprop="datePublished">May 19</time>
+        <section id="main"><article id="post-python-mastery-general-pycharm" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/pkb-blog/2023/05/24/python-mastery-general-pycharm/" class="article-date">
+  <time class="dt-published" datetime="2023-05-23T18:42:35.000Z" itemprop="datePublished">2023-05-24</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/pkb-blog/2022/05/19/host-a-static-website-with-aws-s3/">How to host a static website with AWS S3</a>
+    <h1 class="p-name article-title" itemprop="headline name">
+      Python Mastery - General: Introduction to PyCharm
     </h1>
   
 
-    </header>
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>We’ll quickly setup and test the PyCharm integrated development environment (IDE) made by JetBrains. PyCharm is the most popular code editor for Python.</p>
+<h2 id="Prerequisite-Installing-Python"><a href="#Prerequisite-Installing-Python" class="headerlink" title="Prerequisite: Installing Python"></a>Prerequisite: Installing Python</h2><p>To use Python IDLE on your Windows machine, you need to have Python installed. If you haven’t installed Python yet you can find info on the official <a target="_blank" rel="noopener" href="https://www.python.org/about/gettingstarted/">Getting Started</a> page.</p>
+<p>This post does not explain details about installing software on different types of opperating systems.</p>
+<h2 id="Install-PyCharm"><a href="#Install-PyCharm" class="headerlink" title="Install PyCharm"></a>Install PyCharm</h2><ol>
+<li>Head over to the <a target="_blank" rel="noopener" href="https://www.jetbrains.com/pycharm">PyCharm page</a> and click download.</li>
+<li>Select the operating system you’d like to install PyCharm on.</li>
+<li>Two editions are available for download.<ul>
+<li>Professional which is commercial</li>
+<li>Community which is free and open source.</li>
+</ul>
+</li>
+<li>Download and install on you computer.</li>
+</ol>
+<h2 id="Basic-usage"><a href="#Basic-usage" class="headerlink" title="Basic usage"></a>Basic usage</h2><p>Once you launch the IDE, accept any default configurations. You should be presented with an option to create or open a project.</p>
+<p>Choose <strong>New Project</strong><br>Specify a output path and project name. e.g. <code>C:\Hello-World</code> and create.  </p>
+<p>You will see some basic files and folders created automatically. Below your <code>Hello-World</code> folder add a new Python file. e.g. <code>app.py</code></p>
+<p>Now add some sample code to <code>app.py</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Hello World&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>In PyCharm you will see a green play button. This is the <strong>Run</strong> button and it allows us to execute our Python code.<br>After you click this we should see the <code>Hello World</code> message being output in the window (<em>Terminal Window</em>) below. </p>
+<h2 id="Resources"><a href="#Resources" class="headerlink" title="Resources"></a>Resources</h2><p>Mosh does great job at taking you through this process:<br><a target="_blank" rel="noopener" href="https://youtu.be/kqtD5dpn9C8?t=129">Python for Beginners - Learn Python in 1 Hour</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jaxsbr.github.io/2023/05/24/python-mastery-general-pycharm/" data-id="cli0nvxsa0000ocrvdqwe2wc2" data-title="Python Mastery - General: Introduction to PyCharm" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/IDE/" rel="tag">IDE</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/PyCharm/" rel="tag">PyCharm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Python/" rel="tag">Python</a></li></ul>
+
+    </footer>
   </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/pkb-blog/2023/05/21/python-reference-guide/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Python Power-Up: Your Ultimate Reference Guide and Library Lookup</div>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-  
-    </div></section>
-  
 
 
 </section>
