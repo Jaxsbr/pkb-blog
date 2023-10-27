@@ -106,10 +106,23 @@
 <h2 id="Deploy"><a href="#Deploy" class="headerlink" title="Deploy"></a>Deploy</h2><p>Deploying a Lambda function requires the following steps:</p>
 <ul>
 <li>Zip up the function code</li>
-<li>Push the zip file to AWS S3 and capture neccessary resources Id’s</li>
+<li>Push the zip file to AWS S3 and capture neccessary resources Id’s that links to the S3 object</li>
 <li>Link the S3 Id to the infrastructure template</li>
 <li>Deploy the Cloudformation resource via the AWS CLI</li>
 </ul>
+<h2 id="CI-x2F-CD-Tools"><a href="#CI-x2F-CD-Tools" class="headerlink" title="CI&#x2F;CD Tools"></a>CI&#x2F;CD Tools</h2><p>I’ve not yet decide on what tool I’d like to use but have two preferences:</p>
+<ul>
+<li>Github Actions</li>
+<li>AWS Code Build&#x2F;Deploy</li>
+</ul>
+<p>Why would I need this, could I not just run the individual deploy scripts?<br>My main reason for considering CI&#x2F;CD tools are:</p>
+<ul>
+<li>Reliable deployments (pressing a button is less error prone than running a script with arguments)</li>
+<li>Provides a way to orchestrate multiple deploy scripts</li>
+<li>Allows me a unique upskilling opportunity that aligns with my day job</li>
+</ul>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Lamda function code is seperated by function name, deployment and infrastructure files reside in the root <code>lambda</code> directory.<br>I’m considering the introduction of CI&#x2F;CD tooling into the project but need to look at pros and cons of my options.</p>
+<p><a href="https://jaxsbr.github.io/pkb-blog/2023/10/13/boxyvault-project-planning/">Previous Boxyvault Project Planning</a> - stay tuned for next post</p>
 
       
     </div>
@@ -171,7 +184,7 @@
 <p>Tasks are linked to their respective Milestones making it simple to see how the task is contributing to the bigger picture. In Notion it’s also easy to utilize “Backlinks” to have tasks refer to one another when there is a need for making a dependency visible.</p>
 <p>In my Tasks database I have a column called “Status” and this provides a mechanism for seeing what is pending, in-progress or completed.</p>
 <p>Another great feature of Notion and the database system is that each record has an underlying Page representative. This means that if I need to add more context to a task, I can expand it’s page and populate it with any amount of text, links, images and syntax highlighted code snippets.</p>
-<h2 id="Next"><a href="#Next" class="headerlink" title="Next"></a>Next</h2><p>Stay tuned for the next post.</p>
+<p><a href="https://jaxsbr.github.io/pkb-blog/2023/10/13/boxyvault-file-management/">Previous - Boxyvault Intro</a> - <a href="https://jaxsbr.github.io/pkb-blog/2023/10/27/boxyvault-lambda-infra/">Next - Boxyvault Lambda Infra</a></p>
 
       
     </div>
@@ -246,7 +259,7 @@
 <li>I’m interested to see if this can become and open source project or income source</li>
 <li>A large project like this will give me many opportunities to practice technical writing</li>
 </ul>
-<h2 id="Next"><a href="#Next" class="headerlink" title="Next"></a>Next</h2><p><a href="https://jaxsbr.github.io/pkb-blog/2023/10/13/boxyvault-project-planning/">Boxyvault Project Planning</a></p>
+<p><a href="https://jaxsbr.github.io/pkb-blog/2023/10/13/boxyvault-project-planning/">Next - Boxyvault Project Planning</a></p>
 
       
     </div>
