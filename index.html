@@ -97,7 +97,7 @@
 <p>Thus far I’ve been using bash scripts to invoke the AWS CLI in order to create my infrastructure, but I’m quite curios to see if I can also get into some CI&#x2F;CD tools, e.g. Github Actions or AWS’s code build tools. My two requirements are:</p>
 <ul>
 <li>The CI&#x2F;CD process or pipelines is also declared as code, nothing manually configured</li>
-<li>Secrets or tokens are secure an has a well documentend approach for setting up.</li>
+<li>Secrets or tokens are secure an has a well documented approach for setting up.</li>
 </ul>
 <p>This is important to me because I don’t know if Boxyvault will be a Saas or a open source project, but both would benefit from having everything defined as code due to the flexibility and speed it will provide.</p>
 <p>What follows is the loose structure I’m following for laying out the Lambda’s code and infrastructure:</p>
@@ -106,7 +106,7 @@
 <h2 id="Deploy"><a href="#Deploy" class="headerlink" title="Deploy"></a>Deploy</h2><p>Deploying a Lambda function requires the following steps:</p>
 <ul>
 <li>Zip up the function code</li>
-<li>Push the zip file to AWS S3 and capture neccessary resources Id’s that links to the S3 object</li>
+<li>Push the zip file to AWS S3 and capture necessary resources Id’s that links to the S3 object</li>
 <li>Link the S3 Id to the infrastructure template</li>
 <li>Deploy the Cloudformation resource via the AWS CLI</li>
 </ul>
@@ -121,9 +121,9 @@
 <li>Provides a way to orchestrate multiple deploy scripts</li>
 <li>Allows me a unique upskilling opportunity that aligns with my day job</li>
 </ul>
-<h2 id="So-what-is-next"><a href="#So-what-is-next" class="headerlink" title="So what is next?"></a>So what is next?</h2><p>The next task I want to work on is to get a simple Lambda function working and returning dummy data. Once I have this, I can build out the Lambda resource and IAM roles template file. Finnaly I need to make a deploy script the uses <code>awscli</code> to provision the Lambda function and it’s roles. Additionally all the steps listed in <a href="#deploy">Deploy</a> needs to be implemented.</p>
+<h2 id="So-what-is-next"><a href="#So-what-is-next" class="headerlink" title="So what is next?"></a>So what is next?</h2><p>The next task I want to work on is to get a simple Lambda function working and returning dummy data. Once I have this, I can build out the Lambda resource and IAM roles template file. Finally I need to make a deploy script the uses <code>awscli</code> to provision the Lambda function and it’s roles. Additionally all the steps listed in <a href="#deploy">Deploy</a> needs to be implemented.</p>
 <h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><ul>
-<li>Lambda function code is seperated by function name, deployment and infrastructure files reside in the root <code>lambda</code> directory.</li>
+<li>Lambda function code is separated by function name, deployment and infrastructure files reside in the root <code>lambda</code> directory.</li>
 <li>I’m considering the introduction of CI&#x2F;CD tooling into the project but need to look at pros and cons of my options.</li>
 <li>My next post will detail progress I’ve made on a dummy data Lambda function.</li>
 </ul>
@@ -171,13 +171,13 @@
         <h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h2><p>In this post I’ll talk about how I manage my personal projects and the initial milestones I’d like to reach while building <a href="https://jaxsbr.github.io/pkb-blog/2023/10/13/boxyvault-file-management/">Boxyvault</a></p>
 <h2 id="Why-project-planning-is-needed"><a href="#Why-project-planning-is-needed" class="headerlink" title="Why project planning is needed?"></a>Why project planning is needed?</h2><p>Well, it’s not needed, however as a software engineer working in the corporate environment I’ve seen the impact of not planning software project appropriately.</p>
 <p>There are two things I’ve seen happen when project planning is not executed well.</p>
-<h3 id="Scope-creep"><a href="#Scope-creep" class="headerlink" title="Scope creep"></a>Scope creep</h3><p>Without proper boundaries or minimum viable product (MVP) definitions, a project can quickly gain new features.<br>These new features make sense during the projects initial phases but increase the likelyhood of resulting in the project not reaching deadlines, dissapointing users and failing due to withdrawl of stakeholder support.</p>
+<h3 id="Scope-creep"><a href="#Scope-creep" class="headerlink" title="Scope creep"></a>Scope creep</h3><p>Without proper boundaries or minimum viable product (MVP) definitions, a project can quickly gain new features.<br>These new features make sense during the projects initial phases but increase the likelihood of resulting in the project not reaching deadlines, disappointing users and failing due to withdrawal of stakeholder support.</p>
 <p>Project planning should cap the features that are intended to be developed and clearly describe what will and won’t be considered for Beta versions.</p>
-<h3 id="Inefficient-Development"><a href="#Inefficient-Development" class="headerlink" title="Inefficient Development"></a>Inefficient Development</h3><p>When either the project planning tooling is lacking or the use of proper task management is not enforcement, chaos can ensue. In scenarios like this engineers use their own approaches to tracking progress and reporting back to stakeholders. Without a form of standardization information gets lost, duplicated or corrupted ultimiatly resulting in poor delivery performance.</p>
+<h3 id="Inefficient-Development"><a href="#Inefficient-Development" class="headerlink" title="Inefficient Development"></a>Inefficient Development</h3><p>When either the project planning tooling is lacking or the use of proper task management is not enforcement, chaos can ensue. In scenarios like this engineers use their own approaches to tracking progress and reporting back to stakeholders. Without a form of standardization information gets lost, duplicated or corrupted ultimately resulting in poor delivery performance.</p>
 <p>Project planning should define how progress is tracked and reported on. This provides visibility on successes and potential blockers. This visibility is instrumental in allowing agile behavior during the projects development.</p>
-<h2 id="My-personal-planning"><a href="#My-personal-planning" class="headerlink" title="My personal planning"></a>My personal planning</h2><p>Since I’m working on a personal project some of typical project planning requirement are less important as I report to myself. However, being organised and having visibility of what to work on when is still highly valuable.</p>
-<h3 id="How"><a href="#How" class="headerlink" title="How"></a>How</h3><p>I use the <a target="_blank" rel="noopener" href="https://www.notion.so/desktop">Notion</a> app to plan my projects. A simple page per project, Milestones and Tasks embeded databases helps create actionable task management.</p>
-<p>Notion is great for this as it allow rich text editing, embeded URL links and uploading of files. The embeded database system is flexible and allows you to manage any type of data.</p>
+<h2 id="My-personal-planning"><a href="#My-personal-planning" class="headerlink" title="My personal planning"></a>My personal planning</h2><p>Since I’m working on a personal project some of typical project planning requirement are less important as I report to myself. However, being organized and having visibility of what to work on when is still highly valuable.</p>
+<h3 id="How"><a href="#How" class="headerlink" title="How"></a>How</h3><p>I use the <a target="_blank" rel="noopener" href="https://www.notion.so/desktop">Notion</a> app to plan my projects. A simple page per project, Milestones and Tasks embedded databases helps create actionable task management.</p>
+<p>Notion is great for this as it allow rich text editing, embedded URL links and uploading of files. The embedded database system is flexible and allows you to manage any type of data.</p>
 <h3 id="Milestones"><a href="#Milestones" class="headerlink" title="Milestones"></a>Milestones</h3><p>So what milestones do I have for Boxyvault?</p>
 <ul>
 <li>User Authentication (federated login to a Boxyvault front-end)</li>
@@ -240,7 +240,7 @@
 </ul>
 <h3 id="Boxyvault"><a href="#Boxyvault" class="headerlink" title="Boxyvault"></a>Boxyvault</h3><p>Boxyvault is the codename I’ve chosen for this project.<br>The name intends to reflects the concept of a container that is a safe keep for valuable content.</p>
 <h2 id="So-what-is-this-Idea"><a href="#So-what-is-this-Idea" class="headerlink" title="So what is this Idea?"></a>So what is this Idea?</h2><p>I want to use the AWS’s S3 service to store and manage my family photo’s and video’s. I developing a front-end in React which enables custom functionality such as tagging, previewing and archiving of content.</p>
-<h2 id="Why-not-use-Google-Drive"><a href="#Why-not-use-Google-Drive" class="headerlink" title="Why not use Google Drive?"></a>Why not use Google Drive?</h2><p>I am very cheap and enjoy free stuff and with this comes use of the default 15 gigs of storage Google Drive offers. Unfortunatly I’ve maxed out this free storage very quickly as the size of my family content far exceeds this.<br>So I looked into the pricing tiers offered to upgrade my Google Drive storage and despite it being somewhat resonable at lower sizes (100-200 gb) the jump to 2 tb (max) was too expensive. Additionally I foresee my 4k video’s needing more space in the future.</p>
+<h2 id="Why-not-use-Google-Drive"><a href="#Why-not-use-Google-Drive" class="headerlink" title="Why not use Google Drive?"></a>Why not use Google Drive?</h2><p>I am very cheap and enjoy free stuff and with this comes use of the default 15 gigs of storage Google Drive offers. Unfortunately I’ve maxed out this free storage very quickly as the size of my family content far exceeds this.<br>So I looked into the pricing tiers offered to upgrade my Google Drive storage and despite it being somewhat reasonable at lower sizes (100-200 gb) the jump to 2 tb (max) was too expensive. Additionally I foresee my 4k video’s needing more space in the future.</p>
 <h2 id="Surely-you-can-find-some-alternatives"><a href="#Surely-you-can-find-some-alternatives" class="headerlink" title="Surely you can find some alternatives?"></a>Surely you can find some alternatives?</h2><p>What are my options here? I’ll list them as I saw it:</p>
 <ul>
 <li><ol>
@@ -256,7 +256,7 @@
 </ol>
 </li>
 <li><ol start="4">
-<li>Build my own system and rely on AWS S3 and Glasier to make it cost effective</li>
+<li>Build my own system and rely on AWS S3 and Glacier to make it cost effective</li>
 </ol>
 </li>
 </ul>
