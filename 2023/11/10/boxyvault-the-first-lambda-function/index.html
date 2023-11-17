@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Boxyvault - The first Lambda function | Personal Knowledgebase Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="OverviewThis entry delves into what I discovered while implementing the first Lambda function for Boxyvault. A couple of interesting and unexpected things appeared that is worth sharing such as needin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Boxyvault - The first Lambda function">
+<meta property="og:url" content="https://jaxsbr.github.io/2023/11/10/boxyvault-the-first-lambda-function/index.html">
+<meta property="og:site_name" content="Personal Knowledgebase Blog">
+<meta property="og:description" content="OverviewThis entry delves into what I discovered while implementing the first Lambda function for Boxyvault. A couple of interesting and unexpected things appeared that is worth sharing such as needin">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-11-10T09:31:13.000Z">
+<meta property="article:modified_time" content="2023-11-17T04:39:42.161Z">
+<meta property="article:author" content="jacobus brink">
+<meta property="article:tag" content="AWS">
+<meta property="article:tag" content="S3">
+<meta property="article:tag" content="CloudFormation">
+<meta property="article:tag" content="API Gateway">
+<meta property="article:tag" content="DynamoDb">
+<meta property="article:tag" content="Lambda">
+<meta property="article:tag" content="Paging">
+<meta property="article:tag" content="bash">
+<meta property="article:tag" content="zip">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/pkb-blog/atom.xml" title="Personal Knowledgebase Blog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/pkb-blog/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/pkb-blog/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/pkb-blog/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/pkb-blog/" id="logo">Personal Knowledgebase Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/pkb-blog/">Home</a>
+        
+          <a class="main-nav-link" href="/pkb-blog/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/pkb-blog/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jaxsbr.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-boxyvault-the-first-lambda-function" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/pkb-blog/2023/11/10/boxyvault-the-first-lambda-function/" class="article-date">
+  <time class="dt-published" datetime="2023-11-10T09:31:13.000Z" itemprop="datePublished">2023-11-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Boxyvault - The first Lambda function
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This entry delves into what I discovered while implementing the first Lambda function for Boxyvault. A couple of interesting and unexpected things appeared that is worth sharing such as needing to provision AWS S3 buckets before being able to deploy Lambda functions. Also my findings of improving logging code in Python.</p>
+<ul>
+<li><a href="the-first-lambda-function">The first Lambda function</a></li>
+<li><a href="#how-do-we-handle-filter-arguments">How do we handle filter arguments</a></li>
+<li><a href="#paging-dynamodb-results-in-lambda">Paging DynamoDb results in Lambda</a></li>
+<li><a href="#infrastructure-requirements">Infrastructure requirements</a></li>
+<li><a href="#lessons-learned">Lessons Learned</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+<h2 id="The-first-Lambda-function"><a href="#The-first-Lambda-function" class="headerlink" title="The first Lambda function"></a>The first Lambda function</h2><p>What will the first Lambda function do? The objective is to retrieve file records that correspond to actual files stored in AWS S3.<br>However, we are not able to do this at the moment as much of the required components such as data storage do not exist yet. In order to make progress without these parts I’ll develop some of the foundation pieces such as the Lambda function code, infrastructure, permissions and mock return data. Other parts like the AWS DynamoDb and relevant data schema will be implemented at a later stage.</p>
+<p>The function will eventually return data from DynamoDb and optionally reduce the result set if a filter query is provided. Three potential fields I foresee being used for filtering is <code>tag</code>, <code>name</code> and <code>upload-date</code>. But for the sake of progress I will not implement filtering of the mock data.</p>
+<p><code>Tag</code> one of many text strings associate with a file, e.g. <code>un processed</code>, <code>holiday rotorua 2023</code>  </p>
+<p><code>Name</code> the name of the file being uploaded.  </p>
+<p><code>UploadDate</code> is the date when the file was uploaded. Useful for showing recent default content on a dashboard.</p>
+<h2 id="How-do-we-handle-filter-arguments"><a href="#How-do-we-handle-filter-arguments" class="headerlink" title="How do we handle filter arguments"></a>How do we handle filter arguments</h2><p>I will be invoking these Lambda functions via and API Gateway RESTful request.<br>This means we’ll utilize typical mechanisms such as query parameters to deliver the filter arguments to the Lambda function. e.g.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /files?<span class="built_in">limit</span>=&#123;<span class="built_in">limit</span>&#125;&amp;start-key=&#123;start-key&#125;&amp;tag=&#123;tag&#125;</span><br></pre></td></tr></table></figure>
+
+<p>All Lambda functions consist of an entry point usually referred to as it’s <code>handler</code> function. Within this handler we are able to extract details about the calling operation, referred as the <code>context</code> and in this case it would contain the query parameters provided by the invoking endpoint URL.</p>
+<p>In this way each Lambda function invocation will have the necessary argument values to filter which file record are to be returned.</p>
+<h2 id="Paging-DynamoDb-results-in-Lambda"><a href="#Paging-DynamoDb-results-in-Lambda" class="headerlink" title="Paging DynamoDb results in Lambda"></a>Paging DynamoDb results in Lambda</h2><p>I anticipate that every Boxyvault user will upload many more files than one web page can display. I want to address this with data paging instead of infinite scrolling due to the simplicity of it’s implementation. Additionally the amount of data on the web page will remain low and hopefully contribute to fast loading and overall snappy UI.</p>
+<p>I will utilize two query parameters to orchestrate result paging.</p>
+<ul>
+<li><code>limit</code> is the maximum number of records to return.</li>
+<li><code>startKey</code> is the key of the item where the query should start. This is used for pagination.</li>
+</ul>
+<h2 id="Infrastructure-requirements"><a href="#Infrastructure-requirements" class="headerlink" title="Infrastructure requirements"></a>Infrastructure requirements</h2><p>My chosen approach for deploying Lambda functions is to use <code>awscli</code> and <code>CloudFormation</code>. Given I’ve deployed other AWS resources like this previously I assumed that I’d need a simple CloudFormation template with my Lambda function declaration. But soon after looking into the Lambda service required properties, I realized there was a bit more work to do.</p>
+<p>Lambda functions consist of three parts:</p>
+<ul>
+<li>IAM role that grants the function invocation access (can be invoked)</li>
+<li>Resource declaration that creates the function in AWS</li>
+<li>Code that the function runs when invoked</li>
+</ul>
+<p>The first two is simple and can be declared in the CloudFormation template, the code section however is more involved. To link code to the Lambda function resource in the CloudFormation template, we first need to zip up the code which is done in a deployment script. Then we need to upload the zip file to an AWS <code>S3</code> bucket. The file can then be referenced in the Lambda function’s properties within the CloudFormation template.</p>
+<p>But wait, there’s more. We need to provision an <code>S3</code> bucket before we can deploy a file.<br>Thus I’ve included a new <code>s3</code> section to the <code>Boxyvault-Infra</code> repository which contains both a CloudFormation template declaring the S3 bucket details as well as a deploy script that initiates the provisioning process. The deployment will typically be run before the Lambda function deployment process as a pre requisite.</p>
+<h2 id="Lessons-Learned"><a href="#Lessons-Learned" class="headerlink" title="Lessons Learned"></a>Lessons Learned</h2><h3 id="Expected-Lambda-handler-format-in-CloudFormation"><a href="#Expected-Lambda-handler-format-in-CloudFormation" class="headerlink" title="Expected Lambda handler format in CloudFormation"></a>Expected Lambda handler format in CloudFormation</h3><p>When developing the CloudFormation for a Lambda function you have to provide a value for the <code>handler</code> property. This value is to be formatted and consists of two parts separated by a dot <code>.</code>:</p>
+<ul>
+<li>The handler file name. e.g. <code>my_handler.py</code></li>
+<li>The handler function name. e.g. <code>my_handler_function</code></li>
+</ul>
+<p>Handler &#x3D; <code>my_handler.my_handler_function</code></p>
+<h3 id="Directory-structure-required-to-invoke-Lambda-functions"><a href="#Directory-structure-required-to-invoke-Lambda-functions" class="headerlink" title="Directory structure required to invoke Lambda functions"></a>Directory structure required to invoke Lambda functions</h3><p>The Lambda function’s code file containing it’s <code>handler</code> function needs to be located in the root directory</p>
+<h3 id="IAM-Role-and-Policy-circular-dependency"><a href="#IAM-Role-and-Policy-circular-dependency" class="headerlink" title="IAM Role and Policy circular dependency"></a>IAM Role and Policy circular dependency</h3><p>When declaring the <code>lambda:InvokeFunction</code> policy as a policy in the Lambda function execution role you may encounter a circular dependency error. The solution is to create a standalone policy and link it to the Lambda role instead.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>In our journey to add the first Boxyvault Lambda function, we’ve uncovered some insights. The need for provisioning AWS S3 buckets as a Lambda pre requisite has resulted in a new infrastructure section in the <code>Boxyvault-Infra</code> repository.</p>
+<p>Prioritizing foundation pieces, Lambda code, infrastructure and mock data has set the stage for phased implementation. Filter arguments, handled via API Gateway RESTful requests, ensure we have flexibility within the handler function while extracting context details.</p>
+<p>We’ve started thinking about data overload, a paging strategy using the <code>limit</code> and <code>startKey</code> parameters to ensure a responsive and smooth user experience.</p>
+<p>As I continue building Boxyvault, I hope these foundational insights will lead to a scalable and efficient system.</p>
+<p><a href="https://jaxsbr.github.io/pkb-blog/2023/10/16/boxyvault-lambda-infra/">previous - Lambda function infrastructure</a> - Stay tuned for next post</p>
+<h2 id="Code-Preview-😁"><a href="#Code-Preview-😁" class="headerlink" title="Code Preview 😁"></a>Code Preview 😁</h2><p>I’m adding this basic Lambda function code here for those interested in a simple starting point.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"></span><br><span class="line">logging.getLogger().setLevel(logging.INFO)</span><br><span class="line"></span><br><span class="line">data = [</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;name&quot;</span>: <span class="string">&#x27;file One.pdf&#x27;</span>,</span><br><span class="line">        <span class="string">&quot;uploadDate&quot;</span>: <span class="string">&#x27;2023-09-22T00:00:00Z&#x27;</span>,</span><br><span class="line">        <span class="string">&quot;tags&quot;</span>: [<span class="string">&#x27;Holiday&#x27;</span>, <span class="string">&#x27;Moving&#x27;</span>, <span class="string">&#x27;Durban&#x27;</span>]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;name&quot;</span>: <span class="string">&#x27;file Two.jpg&#x27;</span>,</span><br><span class="line">        <span class="string">&quot;uploadDate&quot;</span>: <span class="string">&#x27;2023-09-21T00:00:00Z&#x27;</span>,</span><br><span class="line">        <span class="string">&quot;tags&quot;</span>: [<span class="string">&#x27;Umhlanga&#x27;</span>, <span class="string">&#x27;Airport&#x27;</span>, <span class="string">&#x27;Beach&#x27;</span>]</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_all_files</span>():</span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">handle_get_request</span>(<span class="params">path</span>):</span><br><span class="line">    <span class="keyword">if</span> path == <span class="string">&#x27;/files&#x27;</span>:</span><br><span class="line">        result = json.dumps(get_all_files())</span><br><span class="line">        logging.info(<span class="string">f&#x27;files returned: <span class="subst">&#123;result&#125;</span>&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> get_valid_http_response(result)</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> get_invalid_http_response(<span class="number">404</span>, <span class="string">&#x27;Not Found&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_valid_http_response</span>(<span class="params">response_data</span>):</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">&#x27;statusCode&#x27;</span>: <span class="number">200</span>,</span><br><span class="line">        <span class="string">&#x27;body&#x27;</span>: response_data,</span><br><span class="line">        <span class="string">&#x27;headers&#x27;</span>: &#123;</span><br><span class="line">            <span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>: <span class="string">&#x27;*&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;Access-Control-Allow-Headers&#x27;</span>: <span class="string">&#x27;*&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;Access-Control-Allow-Methods&#x27;</span>: <span class="string">&#x27;*&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;application/json&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_invalid_http_response</span>(<span class="params">code, message</span>):</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">&#x27;statusCode&#x27;</span>: code,</span><br><span class="line">        <span class="string">&#x27;body&#x27;</span>: json.dumps(message)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">lambda_handler</span>(<span class="params">event, context</span>):</span><br><span class="line">    http_method = event[<span class="string">&#x27;httpMethod&#x27;</span>]</span><br><span class="line">    path = event[<span class="string">&#x27;path&#x27;</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> http_method == <span class="string">&#x27;GET&#x27;</span>:</span><br><span class="line">        <span class="keyword">return</span> handle_get_request(path)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> get_invalid_http_response(<span class="number">405</span>, <span class="string">&#x27;Method Not Allowed&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jaxsbr.github.io/2023/11/10/boxyvault-the-first-lambda-function/" data-id="clp25cwuo0001i4rvh9b4acve" data-title="Boxyvault - The first Lambda function" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/API-Gateway/" rel="tag">API Gateway</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/AWS/" rel="tag">AWS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/CloudFormation/" rel="tag">CloudFormation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/DynamoDb/" rel="tag">DynamoDb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Lambda/" rel="tag">Lambda</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Paging/" rel="tag">Paging</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/S3/" rel="tag">S3</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/bash/" rel="tag">bash</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/zip/" rel="tag">zip</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/pkb-blog/2023/10/16/boxyvault-lambda-infra/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Boxyvault - Lambda function origins</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/NET/" rel="tag">.NET</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/API-Gateway/" rel="tag">API Gateway</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AWS/" rel="tag">AWS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AWS-Lambda/" rel="tag">AWS Lambda</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Amazon-API-Gateway/" rel="tag">Amazon API Gateway</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Amplify/" rel="tag">Amplify</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Arcade/" rel="tag">Arcade</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Artificial-Intelligence/" rel="tag">Artificial Intelligence</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Azure/" rel="tag">Azure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Bash/" rel="tag">Bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/BeautifulSoup/" rel="tag">BeautifulSoup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Bokeh/" rel="tag">Bokeh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Boto3/" rel="tag">Boto3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Boxyvault/" rel="tag">Boxyvault</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/C/" rel="tag">C#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/CI-CD/" rel="tag">CI&#x2F;CD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/ChatGPT/" rel="tag">ChatGPT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Click/" rel="tag">Click</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Cloud/" rel="tag">Cloud</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/CloudFormation/" rel="tag">CloudFormation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Code-Build/" rel="tag">Code Build</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Code-Deploy/" rel="tag">Code Deploy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Cognito/" rel="tag">Cognito</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Comprehend/" rel="tag">Comprehend</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Credentials/" rel="tag">Credentials</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Design/" rel="tag">Design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Django/" rel="tag">Django</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/DynamoDB/" rel="tag">DynamoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/DynamoDb/" rel="tag">DynamoDb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/File-management/" rel="tag">File management</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Flask/" rel="tag">Flask</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Github-Actions/" rel="tag">Github Actions</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Green/" rel="tag">Green</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/IAM-Role/" rel="tag">IAM Role</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/IDE/" rel="tag">IDE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/IDLE/" rel="tag">IDLE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Integration/" rel="tag">Integration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Keras/" rel="tag">Keras</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Lambda/" rel="tag">Lambda</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Lambda-function/" rel="tag">Lambda function</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/ML/" rel="tag">ML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Machine-Learning/" rel="tag">Machine Learning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Matplotlib/" rel="tag">Matplotlib</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Microsoft/" rel="tag">Microsoft</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Milestones/" rel="tag">Milestones</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/NLTK/" rel="tag">NLTK</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Neural-Networks/" rel="tag">Neural Networks</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Notion/" rel="tag">Notion</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/NumPy/" rel="tag">NumPy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/OpenCV/" rel="tag">OpenCV</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Paging/" rel="tag">Paging</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Panda3D/" rel="tag">Panda3D</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Pandas/" rel="tag">Pandas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Plotly/" rel="tag">Plotly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Project-Planning/" rel="tag">Project Planning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/PyAutoGUI/" rel="tag">PyAutoGUI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/PyCharm/" rel="tag">PyCharm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/PyQt/" rel="tag">PyQt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/PySide/" rel="tag">PySide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/PyTorch/" rel="tag">PyTorch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Pygame/" rel="tag">Pygame</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Rate-limiting/" rel="tag">Rate limiting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/React/" rel="tag">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Requestium/" rel="tag">Requestium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Requests/" rel="tag">Requests</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/S3/" rel="tag">S3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/SDK/" rel="tag">SDK</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/SPA/" rel="tag">SPA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/SQL/" rel="tag">SQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/SQLAlchemy/" rel="tag">SQLAlchemy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/SciPy/" rel="tag">SciPy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Scikit-learn/" rel="tag">Scikit-learn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Script/" rel="tag">Script</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Seaborn/" rel="tag">Seaborn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Signed-Url/" rel="tag">Signed Url</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Static-Website-Hosting/" rel="tag">Static Website Hosting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Task-Management/" rel="tag">Task Management</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Tasks/" rel="tag">Tasks</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/TensorFlow/" rel="tag">TensorFlow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Throttling/" rel="tag">Throttling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Tkinter/" rel="tag">Tkinter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Tornado/" rel="tag">Tornado</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Windows/" rel="tag">Windows</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/bash/" rel="tag">bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/nodejs/" rel="tag">nodejs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/nvm/" rel="tag">nvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/schedule/" rel="tag">schedule</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/zip/" rel="tag">zip</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/pkb-blog/tags/NET/" style="font-size: 10px;">.NET</a> <a href="/pkb-blog/tags/AI/" style="font-size: 16px;">AI</a> <a href="/pkb-blog/tags/API-Gateway/" style="font-size: 12px;">API Gateway</a> <a href="/pkb-blog/tags/AWS/" style="font-size: 20px;">AWS</a> <a href="/pkb-blog/tags/AWS-Lambda/" style="font-size: 10px;">AWS Lambda</a> <a href="/pkb-blog/tags/Amazon-API-Gateway/" style="font-size: 10px;">Amazon API Gateway</a> <a href="/pkb-blog/tags/Amplify/" style="font-size: 10px;">Amplify</a> <a href="/pkb-blog/tags/Arcade/" style="font-size: 10px;">Arcade</a> <a href="/pkb-blog/tags/Artificial-Intelligence/" style="font-size: 10px;">Artificial Intelligence</a> <a href="/pkb-blog/tags/Azure/" style="font-size: 10px;">Azure</a> <a href="/pkb-blog/tags/Bash/" style="font-size: 10px;">Bash</a> <a href="/pkb-blog/tags/BeautifulSoup/" style="font-size: 10px;">BeautifulSoup</a> <a href="/pkb-blog/tags/Bokeh/" style="font-size: 10px;">Bokeh</a> <a href="/pkb-blog/tags/Boto3/" style="font-size: 10px;">Boto3</a> <a href="/pkb-blog/tags/Boxyvault/" style="font-size: 14px;">Boxyvault</a> <a href="/pkb-blog/tags/C/" style="font-size: 12px;">C#</a> <a href="/pkb-blog/tags/CI-CD/" style="font-size: 10px;">CI/CD</a> <a href="/pkb-blog/tags/ChatGPT/" style="font-size: 10px;">ChatGPT</a> <a href="/pkb-blog/tags/Click/" style="font-size: 10px;">Click</a> <a href="/pkb-blog/tags/Cloud/" style="font-size: 10px;">Cloud</a> <a href="/pkb-blog/tags/CloudFormation/" style="font-size: 12px;">CloudFormation</a> <a href="/pkb-blog/tags/Code-Build/" style="font-size: 10px;">Code Build</a> <a href="/pkb-blog/tags/Code-Deploy/" style="font-size: 10px;">Code Deploy</a> <a href="/pkb-blog/tags/Cognito/" style="font-size: 12px;">Cognito</a> <a href="/pkb-blog/tags/Comprehend/" style="font-size: 10px;">Comprehend</a> <a href="/pkb-blog/tags/Credentials/" style="font-size: 10px;">Credentials</a> <a href="/pkb-blog/tags/Design/" style="font-size: 10px;">Design</a> <a href="/pkb-blog/tags/Django/" style="font-size: 10px;">Django</a> <a href="/pkb-blog/tags/DynamoDB/" style="font-size: 10px;">DynamoDB</a> <a href="/pkb-blog/tags/DynamoDb/" style="font-size: 12px;">DynamoDb</a> <a href="/pkb-blog/tags/File-management/" style="font-size: 10px;">File management</a> <a href="/pkb-blog/tags/Flask/" style="font-size: 10px;">Flask</a> <a href="/pkb-blog/tags/Github-Actions/" style="font-size: 10px;">Github Actions</a> <a href="/pkb-blog/tags/Green/" style="font-size: 10px;">Green</a> <a href="/pkb-blog/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/pkb-blog/tags/IAM-Role/" style="font-size: 10px;">IAM Role</a> <a href="/pkb-blog/tags/IDE/" style="font-size: 12px;">IDE</a> <a href="/pkb-blog/tags/IDLE/" style="font-size: 10px;">IDLE</a> <a href="/pkb-blog/tags/Integration/" style="font-size: 12px;">Integration</a> <a href="/pkb-blog/tags/Keras/" style="font-size: 10px;">Keras</a> <a href="/pkb-blog/tags/Lambda/" style="font-size: 10px;">Lambda</a> <a href="/pkb-blog/tags/Lambda-function/" style="font-size: 10px;">Lambda function</a> <a href="/pkb-blog/tags/ML/" style="font-size: 10px;">ML</a> <a href="/pkb-blog/tags/Machine-Learning/" style="font-size: 10px;">Machine Learning</a> <a href="/pkb-blog/tags/Matplotlib/" style="font-size: 10px;">Matplotlib</a> <a href="/pkb-blog/tags/Microsoft/" style="font-size: 10px;">Microsoft</a> <a href="/pkb-blog/tags/Milestones/" style="font-size: 10px;">Milestones</a> <a href="/pkb-blog/tags/NLTK/" style="font-size: 10px;">NLTK</a> <a href="/pkb-blog/tags/Neural-Networks/" style="font-size: 10px;">Neural Networks</a> <a href="/pkb-blog/tags/Notion/" style="font-size: 10px;">Notion</a> <a href="/pkb-blog/tags/NumPy/" style="font-size: 10px;">NumPy</a> <a href="/pkb-blog/tags/OpenCV/" style="font-size: 10px;">OpenCV</a> <a href="/pkb-blog/tags/Paging/" style="font-size: 10px;">Paging</a> <a href="/pkb-blog/tags/Panda3D/" style="font-size: 10px;">Panda3D</a> <a href="/pkb-blog/tags/Pandas/" style="font-size: 10px;">Pandas</a> <a href="/pkb-blog/tags/Plotly/" style="font-size: 10px;">Plotly</a> <a href="/pkb-blog/tags/Project-Planning/" style="font-size: 10px;">Project Planning</a> <a href="/pkb-blog/tags/PyAutoGUI/" style="font-size: 10px;">PyAutoGUI</a> <a href="/pkb-blog/tags/PyCharm/" style="font-size: 10px;">PyCharm</a> <a href="/pkb-blog/tags/PyQt/" style="font-size: 10px;">PyQt</a> <a href="/pkb-blog/tags/PySide/" style="font-size: 10px;">PySide</a> <a href="/pkb-blog/tags/PyTorch/" style="font-size: 10px;">PyTorch</a> <a href="/pkb-blog/tags/Pygame/" style="font-size: 10px;">Pygame</a> <a href="/pkb-blog/tags/Python/" style="font-size: 16px;">Python</a> <a href="/pkb-blog/tags/Rate-limiting/" style="font-size: 10px;">Rate limiting</a> <a href="/pkb-blog/tags/React/" style="font-size: 12px;">React</a> <a href="/pkb-blog/tags/Requestium/" style="font-size: 10px;">Requestium</a> <a href="/pkb-blog/tags/Requests/" style="font-size: 10px;">Requests</a> <a href="/pkb-blog/tags/S3/" style="font-size: 18px;">S3</a> <a href="/pkb-blog/tags/SDK/" style="font-size: 10px;">SDK</a> <a href="/pkb-blog/tags/SPA/" style="font-size: 10px;">SPA</a> <a href="/pkb-blog/tags/SQL/" style="font-size: 10px;">SQL</a> <a href="/pkb-blog/tags/SQLAlchemy/" style="font-size: 10px;">SQLAlchemy</a> <a href="/pkb-blog/tags/SciPy/" style="font-size: 10px;">SciPy</a> <a href="/pkb-blog/tags/Scikit-learn/" style="font-size: 10px;">Scikit-learn</a> <a href="/pkb-blog/tags/Script/" style="font-size: 10px;">Script</a> <a href="/pkb-blog/tags/Seaborn/" style="font-size: 10px;">Seaborn</a> <a href="/pkb-blog/tags/Selenium/" style="font-size: 10px;">Selenium</a> <a href="/pkb-blog/tags/Signed-Url/" style="font-size: 10px;">Signed Url</a> <a href="/pkb-blog/tags/Static-Website-Hosting/" style="font-size: 10px;">Static Website Hosting</a> <a href="/pkb-blog/tags/Task-Management/" style="font-size: 10px;">Task Management</a> <a href="/pkb-blog/tags/Tasks/" style="font-size: 10px;">Tasks</a> <a href="/pkb-blog/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/pkb-blog/tags/Throttling/" style="font-size: 10px;">Throttling</a> <a href="/pkb-blog/tags/Tkinter/" style="font-size: 10px;">Tkinter</a> <a href="/pkb-blog/tags/Tornado/" style="font-size: 10px;">Tornado</a> <a href="/pkb-blog/tags/Windows/" style="font-size: 10px;">Windows</a> <a href="/pkb-blog/tags/bash/" style="font-size: 10px;">bash</a> <a href="/pkb-blog/tags/nodejs/" style="font-size: 10px;">nodejs</a> <a href="/pkb-blog/tags/nvm/" style="font-size: 10px;">nvm</a> <a href="/pkb-blog/tags/schedule/" style="font-size: 10px;">schedule</a> <a href="/pkb-blog/tags/zip/" style="font-size: 10px;">zip</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2023/05/">May 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2023/02/">February 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/12/">December 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/06/">June 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/05/">May 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/pkb-blog/2023/11/10/boxyvault-the-first-lambda-function/">Boxyvault - The first Lambda function</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2023/10/16/boxyvault-lambda-infra/">Boxyvault - Lambda function origins</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2023/10/13/boxyvault-project-planning/">Boxyvault - Project Planning and Milestones</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2023/10/13/boxyvault-file-management/">Boxyvault - Personal cloud based file management system</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2023/05/24/python-mastery-general-pycharm/">Python Mastery - General: Introduction to PyCharm</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 jacobus brink<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/pkb-blog/" class="mobile-nav-link">Home</a>
+  
+    <a href="/pkb-blog/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/pkb-blog/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/pkb-blog/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/pkb-blog/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
