@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Boxyvault Github CI/CD | Personal Knowledgebase Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="IntroIn this post I’ll talk about Boxyvault’s code migration to Github and Open Id Connect (OIDC) learnings that enables build and deployment process implementation with Github actions (GHA). Reposito">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Boxyvault Github CI&#x2F;CD">
+<meta property="og:url" content="https://jaxsbr.github.io/2023/12/22/boxyvault-github-cicd/index.html">
+<meta property="og:site_name" content="Personal Knowledgebase Blog">
+<meta property="og:description" content="IntroIn this post I’ll talk about Boxyvault’s code migration to Github and Open Id Connect (OIDC) learnings that enables build and deployment process implementation with Github actions (GHA). Reposito">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-12-21T17:41:48.000Z">
+<meta property="article:modified_time" content="2023-12-21T18:56:19.282Z">
+<meta property="article:author" content="jacobus brink">
+<meta property="article:tag" content="AWS">
+<meta property="article:tag" content="CloudFormation">
+<meta property="article:tag" content="Boxyvault">
+<meta property="article:tag" content="Cloud">
+<meta property="article:tag" content="CI&#x2F;CD">
+<meta property="article:tag" content="Github">
+<meta property="article:tag" content="Actions">
+<meta property="article:tag" content="IaC">
+<meta property="article:tag" content="OIDC">
+<meta property="article:tag" content="IdP">
+<meta property="article:tag" content="DevOps">
+<meta property="article:tag" content="Build">
+<meta property="article:tag" content="Deploy">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/pkb-blog/atom.xml" title="Personal Knowledgebase Blog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/pkb-blog/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/pkb-blog/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/pkb-blog/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/pkb-blog/" id="logo">Personal Knowledgebase Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/pkb-blog/">Home</a>
+        
+          <a class="main-nav-link" href="/pkb-blog/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/pkb-blog/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jaxsbr.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-boxyvault-github-cicd" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/pkb-blog/2023/12/22/boxyvault-github-cicd/" class="article-date">
+  <time class="dt-published" datetime="2023-12-21T17:41:48.000Z" itemprop="datePublished">2023-12-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Boxyvault Github CI/CD
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h2><p>In this post I’ll talk about Boxyvault’s code migration to Github and Open Id Connect (OIDC) learnings that enables build and deployment process implementation with Github actions (GHA).</p>
+<h2 id="Repository-Migration"><a href="#Repository-Migration" class="headerlink" title="Repository Migration"></a>Repository Migration</h2><p>In my <a href="https://jaxsbr.github.io/pkb-blog/2023/12/03/boxyvault-github-migration/">previous post</a> I described why I’m planning to migrate Boxyvault’s code repositories from AWS CodeCommit to Github. I’ve now officially completed this step. 😁<br>Initially I thought this would involve some complexity but it was straight forward, especially since I discovered that Github provides an import mechanism that does all the heavy lifting for you.</p>
+<p>When creating a repository in Github, typically you provide some details such as <code>repository name</code>, <code>description</code>, inclusion of <code>.gitigore</code> etc. On the particular <a target="_blank" rel="noopener" href="https://github.com/new">page</a> I discovered an <code>import</code> <a target="_blank" rel="noopener" href="https://github.com/new/import">link</a> and decided to try it out. Here you have to specify the clone URL where the <code>source</code> repository resides, in my case AWS CodeCommit. Followed by the desired repository name as well as specifying if you want a <code>private</code> or <code>public</code> repository. Once all the details are provided you can hit the <code>Begin import</code> button which will prompt you for login details pertaining to you <code>source</code> repository. After completing these steps the import finished without issue.</p>
+<h2 id="Build-amp-Deploy-Migration"><a href="#Build-amp-Deploy-Migration" class="headerlink" title="Build &amp; Deploy Migration"></a>Build &amp; Deploy Migration</h2><p>Up until this round of work, I’ve relied on a local build and deploy processes for deploying Boxyvault’s cloud infrastructure to AWS. Typically by running a <code>bash</code> script that uses my local AWS profile to execute CloudFormation templates.</p>
+<p>Going forward, I’d like to improve on these process in the following ways:</p>
+<ul>
+<li>Reduce manual errors related to the human element</li>
+<li>Catch mistakes in my infrastructure code automatically (linting)</li>
+<li>Orchestrate complex dependency chains without having to remember sequence or caveats</li>
+<li>Deploy infrastructure changes automatically on code changes</li>
+</ul>
+<p>The driving force behind migrating to Github was due to being able to use Github actions to accomplish all the above mentioned goals.</p>
+<h2 id="Is-it-safe-to-create-AWS-resources-from-GHA"><a href="#Is-it-safe-to-create-AWS-resources-from-GHA" class="headerlink" title="Is it safe to create AWS resources from GHA?"></a>Is it safe to create AWS resources from GHA?</h2><p>Short answer, it can be! It is up to us to follow Github and AWS best practices to ensure things are safe and don’t compromise our credentials or cloud accounts.</p>
+<p>In order to communicate with AWS from GHA, we need to authorize the GHA workflow sessions and thus allow them to use AWS services. Github describes two methods that can be used to securely configure AWS access:</p>
+<ul>
+<li>Store AWS secret id and key in Github secrets</li>
+<li>Use an AWS OIDC connection to provide short lived access tokens</li>
+</ul>
+<p>The majority of online recommendations state that the latter option is recommended due to these benefits:</p>
+<ul>
+<li>Tokens are short lived</li>
+<li>No need to rotate long lived security keys</li>
+</ul>
+<p>I opted to follow this option and documented what I did to get my first GHA workflow interacting with AWS.</p>
+<h2 id="How-do-we-establish-an-OIDC-connection-between-GHA-and-AWS"><a href="#How-do-we-establish-an-OIDC-connection-between-GHA-and-AWS" class="headerlink" title="How do we establish an OIDC connection between GHA and AWS?"></a>How do we establish an OIDC connection between GHA and AWS?</h2><p>When the GHA runs, it will execute an assume role step. This step passes information to an AWS OIDC identity provider (IdP) for validation. If validation passes the GHA workflow session gains the same permission as the IAM role. This role has been associated with the particular OIDC connection. Then the GHA workflow can proceed with running various AWS commands. Once the workflow completes, this connection and associated authorization tokens are discarded due to the ephemeral nature of the GHA runners.</p>
+<p>Here is a high level of required tasks:</p>
+<ul>
+<li>Create and OIDC IdP</li>
+<li>Create a role policy</li>
+<li>Create a role and OIDC association</li>
+<li>Attach the role policy to the role</li>
+</ul>
+<h3 id="Create-an-IAM-OIDC-IdP"><a href="#Create-an-IAM-OIDC-IdP" class="headerlink" title="Create an IAM OIDC IdP"></a>Create an IAM OIDC IdP</h3><p>In AWS we create an OIDC identity provider (IdP) that is configured to allow connections from Github’s public OIDC URL domain. i.e. <code>https://token.actions.githubusercontent.com</code>.  </p>
+<p>Github has a special identifier called a <code>thumbprint</code> that we also need to provide. i.e. as of writing: <code>6938fd4d98bab03faadb97b34396831e3780aea1</code></p>
+<h3 id="Create-an-IAM-role-policy"><a href="#Create-an-IAM-role-policy" class="headerlink" title="Create an IAM role policy"></a>Create an IAM role policy</h3><p>We create a policy that outlines a set of execution permissions, all the things we want our GHA workflow to be authorized to do. e.g. Creating or listing a CloudFormation stack. For now this policy is not associated with anything, but we’ll get to that soon.</p>
+<h3 id="Create-an-IAM-role-and-OIDC-association"><a href="#Create-an-IAM-role-and-OIDC-association" class="headerlink" title="Create an IAM role and OIDC association"></a>Create an IAM role and OIDC association</h3><p>Now we create an IAM role that will be assumed by the GHA workflow. We associate this role with the OIDC IdP we created in the previous step. This is done by declaring <code>trusted entities</code> for the role.</p>
+<p>The trusted entities allow the <code>sts:AssumeRoleWithWebIdentity</code> service and scopes access to specific Github organizations.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;Version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2012-10-17&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;Statement&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;Effect&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Allow&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;Principal&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;Federated&quot;</span><span class="punctuation">:</span> <span class="string">&quot;arn:aws:iam::AWS_ACCOUNT_PLACEHOLDER:oidc-provider/token.actions.githubusercontent.com&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;Action&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sts:AssumeRoleWithWebIdentity&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;Condition&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;StringEquals&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                    <span class="attr">&quot;token.actions.githubusercontent.com:sub&quot;</span><span class="punctuation">:</span> <span class="string">&quot;repo:GITHUB_ORG_PLACEHOLDER/boxyvault-infra:ref:refs/heads/main&quot;</span><span class="punctuation">,</span></span><br><span class="line">                    <span class="attr">&quot;token.actions.githubusercontent.com:aud&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sts.amazonaws.com&quot;</span></span><br><span class="line">                <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Attach-the-role-policy-to-the-role"><a href="#Attach-the-role-policy-to-the-role" class="headerlink" title="Attach the role policy to the role"></a>Attach the role policy to the role</h3><p>Lastly we attach the <a href="#create-an-iam-role-policy">role policy</a> to the new role, after which the role can be 1) assumed via OIDC in a GHA workflow and 2) perform various actions against AWS services.</p>
+<h2 id="Automation"><a href="#Automation" class="headerlink" title="Automation"></a>Automation</h2><p>Initially I did all of these steps manually while following a guide (linked below - <a href="#references">references</a>). But seeing that my goal for Boxyvault is to make it easy to setup, I knew this needed some automation.</p>
+<p>I imagine this step to be one of the first things a Boxyvault admin&#x2F;installer would have to do and thus some of it might be more manual. e.g. running a bash script. However, I wanted make sure it was way less complicated than following a detail configuration guide while performing steps on the AWS console. Therefore I wrote a bash script that will provision the role, permission policy and OIDC resources.</p>
+<h3 id="New-section-oidc"><a href="#New-section-oidc" class="headerlink" title="New section - oidc"></a>New section - oidc</h3><p>I created a new directory in the <code>boxyvault-infra</code> repository. This directory will contain both scripts and policy templates.</p>
+<h3 id="Policy-Templates"><a href="#Policy-Templates" class="headerlink" title="Policy Templates"></a>Policy Templates</h3><p>Initially I had a simple policy file that declared permissions, however I realized that other users would have to manually update this to reflect their AWS regions, account id and preferred resources names. Instead I’d like to capture all these details when the script is run an then automatically update the various policy files.</p>
+<p>To do this, I created a <code>template-policy</code> file that has specific placeholder values. With some shell magic I copy the template files content, replace the content placeholder values with actual values and write out the update content to an “actual” policy file. The script then uses this newly create policy file while provisioning the required resources.</p>
+<h3 id="Stucture"><a href="#Stucture" class="headerlink" title="Stucture"></a>Stucture</h3><ul>
+<li>oidc<ul>
+<li>configure.sh</li>
+<li>infra-deployment-policy.json</li>
+<li>oidc-policies-template.json</li>
+<li>oidc-policies.json (git ignored)</li>
+</ul>
+</li>
+</ul>
+<h3 id="Documentation"><a href="#Documentation" class="headerlink" title="Documentation"></a>Documentation</h3><p>Because this is a very important step, so important that Boxyvault will not be provision-able if it’s not done first, I have to document the setup for future me and other users. I wrote up some draft details in a readme.md but soon realized that this is one of many similar complex scenarios and that a single readme file would not suffice. To address this need, I’ve added a new milestone for Boxyvault’s development in my task tracking process, aka, Notion. This entails creating a space or system where I can capture the gotchas and how-to’s as well as the details of how some of the complex things work.</p>
+<p>I’ve seen people use separate Github repositories to act as a central documentation area that can link multiple components and repositories together in one space and think this might be a simple solution. Saying that, I will checkout some other options when I get there.</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p><a target="_blank" rel="noopener" href="https://aws.amazon.com/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/">https://aws.amazon.com/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.github.com/en/rest/actions/oidc?apiVersion=2022-11-28">https://docs.github.com/en/rest/actions/oidc?apiVersion=2022-11-28</a></p>
+<p><a target="_blank" rel="noopener" href="https://scalesec.com/blog/oidc-for-github-actions-on-aws/">https://scalesec.com/blog/oidc-for-github-actions-on-aws/</a></p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Boxyvault is now operating out of Github, both repository management as well as with it CI&#x2F;CD processes. As of now, the existing manual deployment steps I used previously need to all be migrated to new github action workflows. I have a working POC that uses OIDC to grant access to AWS and will use this example to build out all the build and deploy steps.</p>
+<p>I’m excited to have these new capabilities and believe this will serve Boxyvault and it’s users very well.</p>
+<p><a href="https://jaxsbr.github.io/pkb-blog/2023/12/03/boxyvault-github-migration/">Previous - Boxyvault Github migration</a> - Stay tuned for next post</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jaxsbr.github.io/2023/12/22/boxyvault-github-cicd/" data-id="clqfke8z70000l8rvdvvnf9sd" data-title="Boxyvault Github CI/CD" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/AWS/" rel="tag">AWS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Actions/" rel="tag">Actions</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Boxyvault/" rel="tag">Boxyvault</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Build/" rel="tag">Build</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/CI-CD/" rel="tag">CI&#x2F;CD</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Cloud/" rel="tag">Cloud</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/CloudFormation/" rel="tag">CloudFormation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Deploy/" rel="tag">Deploy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/DevOps/" rel="tag">DevOps</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/Github/" rel="tag">Github</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/IaC/" rel="tag">IaC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/IdP/" rel="tag">IdP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/pkb-blog/tags/OIDC/" rel="tag">OIDC</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/pkb-blog/2023/12/03/boxyvault-github-migration/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Boxyvault - Github migration</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/NET/" rel="tag">.NET</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/API-Gateway/" rel="tag">API Gateway</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AWS/" rel="tag">AWS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AWS-CodeCommit/" rel="tag">AWS CodeCommit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/AWS-Lambda/" rel="tag">AWS Lambda</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Actions/" rel="tag">Actions</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Amazon-API-Gateway/" rel="tag">Amazon API Gateway</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Amplify/" rel="tag">Amplify</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Arcade/" rel="tag">Arcade</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Artificial-Intelligence/" rel="tag">Artificial Intelligence</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Azure/" rel="tag">Azure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Bash/" rel="tag">Bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/BeautifulSoup/" rel="tag">BeautifulSoup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Bokeh/" rel="tag">Bokeh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Boto3/" rel="tag">Boto3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Boxyvault/" rel="tag">Boxyvault</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Build/" rel="tag">Build</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/C/" rel="tag">C#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/CI-CD/" rel="tag">CI&#x2F;CD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/ChatGPT/" rel="tag">ChatGPT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Click/" rel="tag">Click</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Cloud/" rel="tag">Cloud</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/CloudFormation/" rel="tag">CloudFormation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Code-Build/" rel="tag">Code Build</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Code-Deploy/" rel="tag">Code Deploy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Cognito/" rel="tag">Cognito</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Comprehend/" rel="tag">Comprehend</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Credentials/" rel="tag">Credentials</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Deploy/" rel="tag">Deploy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Design/" rel="tag">Design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/DevOps/" rel="tag">DevOps</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Django/" rel="tag">Django</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/DynamoDB/" rel="tag">DynamoDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/DynamoDb/" rel="tag">DynamoDb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/File-management/" rel="tag">File management</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Flask/" rel="tag">Flask</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/GHA/" rel="tag">GHA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Github/" rel="tag">Github</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Github-Actions/" rel="tag">Github Actions</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Green/" rel="tag">Green</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/IAM-Role/" rel="tag">IAM Role</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/IDE/" rel="tag">IDE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/IDLE/" rel="tag">IDLE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/IaC/" rel="tag">IaC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/IdP/" rel="tag">IdP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Integration/" rel="tag">Integration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Keras/" rel="tag">Keras</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Lambda/" rel="tag">Lambda</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Lambda-function/" rel="tag">Lambda function</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/ML/" rel="tag">ML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Machine-Learning/" rel="tag">Machine Learning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Matplotlib/" rel="tag">Matplotlib</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Microsoft/" rel="tag">Microsoft</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Milestones/" rel="tag">Milestones</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/NLTK/" rel="tag">NLTK</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Neural-Networks/" rel="tag">Neural Networks</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Notion/" rel="tag">Notion</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/NumPy/" rel="tag">NumPy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/OIDC/" rel="tag">OIDC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/OpenCV/" rel="tag">OpenCV</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Paging/" rel="tag">Paging</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Panda3D/" rel="tag">Panda3D</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Pandas/" rel="tag">Pandas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Plotly/" rel="tag">Plotly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Project-Planning/" rel="tag">Project Planning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/PyAutoGUI/" rel="tag">PyAutoGUI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/PyCharm/" rel="tag">PyCharm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/PyQt/" rel="tag">PyQt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/PySide/" rel="tag">PySide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/PyTorch/" rel="tag">PyTorch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Pygame/" rel="tag">Pygame</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Rate-limiting/" rel="tag">Rate limiting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/React/" rel="tag">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Requestium/" rel="tag">Requestium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Requests/" rel="tag">Requests</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/S3/" rel="tag">S3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/SDK/" rel="tag">SDK</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/SPA/" rel="tag">SPA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/SQL/" rel="tag">SQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/SQLAlchemy/" rel="tag">SQLAlchemy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/SciPy/" rel="tag">SciPy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Scikit-learn/" rel="tag">Scikit-learn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Script/" rel="tag">Script</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Seaborn/" rel="tag">Seaborn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Signed-Url/" rel="tag">Signed Url</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Static-Website-Hosting/" rel="tag">Static Website Hosting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Task-Management/" rel="tag">Task Management</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Tasks/" rel="tag">Tasks</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/TensorFlow/" rel="tag">TensorFlow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Throttling/" rel="tag">Throttling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Tkinter/" rel="tag">Tkinter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Tornado/" rel="tag">Tornado</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/Windows/" rel="tag">Windows</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/bash/" rel="tag">bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/nodejs/" rel="tag">nodejs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/nvm/" rel="tag">nvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/schedule/" rel="tag">schedule</a></li><li class="tag-list-item"><a class="tag-list-link" href="/pkb-blog/tags/zip/" rel="tag">zip</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/pkb-blog/tags/NET/" style="font-size: 10px;">.NET</a> <a href="/pkb-blog/tags/AI/" style="font-size: 15px;">AI</a> <a href="/pkb-blog/tags/API-Gateway/" style="font-size: 11.67px;">API Gateway</a> <a href="/pkb-blog/tags/AWS/" style="font-size: 20px;">AWS</a> <a href="/pkb-blog/tags/AWS-CodeCommit/" style="font-size: 10px;">AWS CodeCommit</a> <a href="/pkb-blog/tags/AWS-Lambda/" style="font-size: 10px;">AWS Lambda</a> <a href="/pkb-blog/tags/Actions/" style="font-size: 11.67px;">Actions</a> <a href="/pkb-blog/tags/Amazon-API-Gateway/" style="font-size: 10px;">Amazon API Gateway</a> <a href="/pkb-blog/tags/Amplify/" style="font-size: 10px;">Amplify</a> <a href="/pkb-blog/tags/Arcade/" style="font-size: 10px;">Arcade</a> <a href="/pkb-blog/tags/Artificial-Intelligence/" style="font-size: 10px;">Artificial Intelligence</a> <a href="/pkb-blog/tags/Azure/" style="font-size: 10px;">Azure</a> <a href="/pkb-blog/tags/Bash/" style="font-size: 10px;">Bash</a> <a href="/pkb-blog/tags/BeautifulSoup/" style="font-size: 10px;">BeautifulSoup</a> <a href="/pkb-blog/tags/Bokeh/" style="font-size: 10px;">Bokeh</a> <a href="/pkb-blog/tags/Boto3/" style="font-size: 10px;">Boto3</a> <a href="/pkb-blog/tags/Boxyvault/" style="font-size: 18.33px;">Boxyvault</a> <a href="/pkb-blog/tags/Build/" style="font-size: 10px;">Build</a> <a href="/pkb-blog/tags/C/" style="font-size: 11.67px;">C#</a> <a href="/pkb-blog/tags/CI-CD/" style="font-size: 13.33px;">CI/CD</a> <a href="/pkb-blog/tags/ChatGPT/" style="font-size: 10px;">ChatGPT</a> <a href="/pkb-blog/tags/Click/" style="font-size: 10px;">Click</a> <a href="/pkb-blog/tags/Cloud/" style="font-size: 11.67px;">Cloud</a> <a href="/pkb-blog/tags/CloudFormation/" style="font-size: 15px;">CloudFormation</a> <a href="/pkb-blog/tags/Code-Build/" style="font-size: 10px;">Code Build</a> <a href="/pkb-blog/tags/Code-Deploy/" style="font-size: 10px;">Code Deploy</a> <a href="/pkb-blog/tags/Cognito/" style="font-size: 11.67px;">Cognito</a> <a href="/pkb-blog/tags/Comprehend/" style="font-size: 10px;">Comprehend</a> <a href="/pkb-blog/tags/Credentials/" style="font-size: 10px;">Credentials</a> <a href="/pkb-blog/tags/Deploy/" style="font-size: 10px;">Deploy</a> <a href="/pkb-blog/tags/Design/" style="font-size: 10px;">Design</a> <a href="/pkb-blog/tags/DevOps/" style="font-size: 10px;">DevOps</a> <a href="/pkb-blog/tags/Django/" style="font-size: 10px;">Django</a> <a href="/pkb-blog/tags/DynamoDB/" style="font-size: 10px;">DynamoDB</a> <a href="/pkb-blog/tags/DynamoDb/" style="font-size: 11.67px;">DynamoDb</a> <a href="/pkb-blog/tags/File-management/" style="font-size: 10px;">File management</a> <a href="/pkb-blog/tags/Flask/" style="font-size: 10px;">Flask</a> <a href="/pkb-blog/tags/GHA/" style="font-size: 10px;">GHA</a> <a href="/pkb-blog/tags/Github/" style="font-size: 11.67px;">Github</a> <a href="/pkb-blog/tags/Github-Actions/" style="font-size: 10px;">Github Actions</a> <a href="/pkb-blog/tags/Green/" style="font-size: 10px;">Green</a> <a href="/pkb-blog/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/pkb-blog/tags/IAM-Role/" style="font-size: 10px;">IAM Role</a> <a href="/pkb-blog/tags/IDE/" style="font-size: 11.67px;">IDE</a> <a href="/pkb-blog/tags/IDLE/" style="font-size: 10px;">IDLE</a> <a href="/pkb-blog/tags/IaC/" style="font-size: 11.67px;">IaC</a> <a href="/pkb-blog/tags/IdP/" style="font-size: 10px;">IdP</a> <a href="/pkb-blog/tags/Integration/" style="font-size: 11.67px;">Integration</a> <a href="/pkb-blog/tags/Keras/" style="font-size: 10px;">Keras</a> <a href="/pkb-blog/tags/Lambda/" style="font-size: 10px;">Lambda</a> <a href="/pkb-blog/tags/Lambda-function/" style="font-size: 10px;">Lambda function</a> <a href="/pkb-blog/tags/ML/" style="font-size: 10px;">ML</a> <a href="/pkb-blog/tags/Machine-Learning/" style="font-size: 10px;">Machine Learning</a> <a href="/pkb-blog/tags/Matplotlib/" style="font-size: 10px;">Matplotlib</a> <a href="/pkb-blog/tags/Microsoft/" style="font-size: 10px;">Microsoft</a> <a href="/pkb-blog/tags/Milestones/" style="font-size: 10px;">Milestones</a> <a href="/pkb-blog/tags/NLTK/" style="font-size: 10px;">NLTK</a> <a href="/pkb-blog/tags/Neural-Networks/" style="font-size: 10px;">Neural Networks</a> <a href="/pkb-blog/tags/Notion/" style="font-size: 10px;">Notion</a> <a href="/pkb-blog/tags/NumPy/" style="font-size: 10px;">NumPy</a> <a href="/pkb-blog/tags/OIDC/" style="font-size: 10px;">OIDC</a> <a href="/pkb-blog/tags/OpenCV/" style="font-size: 10px;">OpenCV</a> <a href="/pkb-blog/tags/Paging/" style="font-size: 10px;">Paging</a> <a href="/pkb-blog/tags/Panda3D/" style="font-size: 10px;">Panda3D</a> <a href="/pkb-blog/tags/Pandas/" style="font-size: 10px;">Pandas</a> <a href="/pkb-blog/tags/Plotly/" style="font-size: 10px;">Plotly</a> <a href="/pkb-blog/tags/Project-Planning/" style="font-size: 10px;">Project Planning</a> <a href="/pkb-blog/tags/PyAutoGUI/" style="font-size: 10px;">PyAutoGUI</a> <a href="/pkb-blog/tags/PyCharm/" style="font-size: 10px;">PyCharm</a> <a href="/pkb-blog/tags/PyQt/" style="font-size: 10px;">PyQt</a> <a href="/pkb-blog/tags/PySide/" style="font-size: 10px;">PySide</a> <a href="/pkb-blog/tags/PyTorch/" style="font-size: 10px;">PyTorch</a> <a href="/pkb-blog/tags/Pygame/" style="font-size: 10px;">Pygame</a> <a href="/pkb-blog/tags/Python/" style="font-size: 15px;">Python</a> <a href="/pkb-blog/tags/Rate-limiting/" style="font-size: 10px;">Rate limiting</a> <a href="/pkb-blog/tags/React/" style="font-size: 11.67px;">React</a> <a href="/pkb-blog/tags/Requestium/" style="font-size: 10px;">Requestium</a> <a href="/pkb-blog/tags/Requests/" style="font-size: 10px;">Requests</a> <a href="/pkb-blog/tags/S3/" style="font-size: 16.67px;">S3</a> <a href="/pkb-blog/tags/SDK/" style="font-size: 10px;">SDK</a> <a href="/pkb-blog/tags/SPA/" style="font-size: 10px;">SPA</a> <a href="/pkb-blog/tags/SQL/" style="font-size: 10px;">SQL</a> <a href="/pkb-blog/tags/SQLAlchemy/" style="font-size: 10px;">SQLAlchemy</a> <a href="/pkb-blog/tags/SciPy/" style="font-size: 10px;">SciPy</a> <a href="/pkb-blog/tags/Scikit-learn/" style="font-size: 10px;">Scikit-learn</a> <a href="/pkb-blog/tags/Script/" style="font-size: 10px;">Script</a> <a href="/pkb-blog/tags/Seaborn/" style="font-size: 10px;">Seaborn</a> <a href="/pkb-blog/tags/Selenium/" style="font-size: 10px;">Selenium</a> <a href="/pkb-blog/tags/Signed-Url/" style="font-size: 10px;">Signed Url</a> <a href="/pkb-blog/tags/Static-Website-Hosting/" style="font-size: 10px;">Static Website Hosting</a> <a href="/pkb-blog/tags/Task-Management/" style="font-size: 10px;">Task Management</a> <a href="/pkb-blog/tags/Tasks/" style="font-size: 10px;">Tasks</a> <a href="/pkb-blog/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/pkb-blog/tags/Throttling/" style="font-size: 10px;">Throttling</a> <a href="/pkb-blog/tags/Tkinter/" style="font-size: 10px;">Tkinter</a> <a href="/pkb-blog/tags/Tornado/" style="font-size: 10px;">Tornado</a> <a href="/pkb-blog/tags/Windows/" style="font-size: 10px;">Windows</a> <a href="/pkb-blog/tags/bash/" style="font-size: 11.67px;">bash</a> <a href="/pkb-blog/tags/nodejs/" style="font-size: 10px;">nodejs</a> <a href="/pkb-blog/tags/nvm/" style="font-size: 10px;">nvm</a> <a href="/pkb-blog/tags/schedule/" style="font-size: 10px;">schedule</a> <a href="/pkb-blog/tags/zip/" style="font-size: 10px;">zip</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2023/05/">May 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2023/02/">February 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/12/">December 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/06/">June 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/pkb-blog/archives/2022/05/">May 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/pkb-blog/2023/12/22/boxyvault-github-cicd/">Boxyvault Github CI/CD</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2023/12/03/boxyvault-github-migration/">Boxyvault - Github migration</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2023/11/10/boxyvault-the-first-lambda-function/">Boxyvault - The first Lambda function</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2023/10/16/boxyvault-lambda-infra/">Boxyvault - Lambda function origins</a>
+          </li>
+        
+          <li>
+            <a href="/pkb-blog/2023/10/13/boxyvault-project-planning/">Boxyvault - Project Planning and Milestones</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 jacobus brink<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/pkb-blog/" class="mobile-nav-link">Home</a>
+  
+    <a href="/pkb-blog/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/pkb-blog/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/pkb-blog/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/pkb-blog/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
